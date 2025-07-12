@@ -2,6 +2,7 @@
   "dependencies": {
     "com.cysharp.unitask": "2.5.10",
     "com.github-glitchenzo.nugetforunity": "4.4.0",
+    "com.mackysoft.serializereference-extensions": "1.6.1",
     "com.unity.addressables": "2.5.0",
     "com.unity.collab-proxy": "2.8.2",
     "com.unity.feature.2d": "2.0.1",
@@ -53,7 +54,8 @@
       "url": "https://package.openupm.com",
       "scopes": [
         "com.cysharp.unitask",
-        "com.github-glitchenzo.nugetforunity"
+        "com.github-glitchenzo.nugetforunity",
+        "com.mackysoft.serializereference-extensions"
       ]
     }
   ]

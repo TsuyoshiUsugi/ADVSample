@@ -1,6 +1,7 @@
-using UnityEditor;
-using UnityEngine;
 using System.IO;
+using UnityEditor;
+using UnityEditor.ProjectWindowCallback;
+using UnityEngine;
 
 public static class CustomScriptCreator
 {
@@ -21,7 +22,7 @@ public static class CustomScriptCreator
 
     private static void CreateScriptFromTemplate(string fileName, string templatePath)
     {
-        string path = GetSelectedPathOrFallback();
+        var path = GetSelectedPathOrFallback();
         ProjectWindowUtil.StartNameEditingIfProjectWindowExists(
             0,
             ScriptableObject.CreateInstance<DoCreateCustomScriptAsset>(),
@@ -33,36 +34,37 @@ public static class CustomScriptCreator
 
     private static string GetSelectedPathOrFallback()
     {
-        foreach (Object obj in Selection.GetFiltered(typeof(Object), SelectionMode.Assets))
+        foreach (var obj in Selection.GetFiltered(typeof(Object), SelectionMode.Assets))
         {
-            string assetPath = AssetDatabase.GetAssetPath(obj);
+            var assetPath = AssetDatabase.GetAssetPath(obj);
             if (File.Exists(assetPath))
                 return Path.GetDirectoryName(assetPath);
             if (Directory.Exists(assetPath))
                 return assetPath;
         }
+
         return "Assets";
     }
 }
 
-internal class DoCreateCustomScriptAsset : UnityEditor.ProjectWindowCallback.EndNameEditAction
+internal class DoCreateCustomScriptAsset : EndNameEditAction
 {
     public override void Action(int instanceId, string pathName, string resourceFile)
     {
-        string className = Path.GetFileNameWithoutExtension(pathName);
-        string template = File.ReadAllText(resourceFile);
+        var className = Path.GetFileNameWithoutExtension(pathName);
+        var template = File.ReadAllText(resourceFile);
 
-        string relativeDir = Path.GetDirectoryName(pathName).Replace("\\", "/");
-        string namespaceName = GenerateNamespace(relativeDir);
+        var relativeDir = Path.GetDirectoryName(pathName).Replace("\\", "/");
+        var namespaceName = GenerateNamespace(relativeDir);
 
-        string content = template
+        var content = template
             .Replace("#SCRIPTNAME#", className)
             .Replace("#NAMESPACE#", namespaceName);
 
         File.WriteAllText(pathName, content);
         AssetDatabase.Refresh();
 
-        Object asset = AssetDatabase.LoadAssetAtPath<Object>(pathName);
+        var asset = AssetDatabase.LoadAssetAtPath<Object>(pathName);
         ProjectWindowUtil.ShowCreatedAsset(asset);
     }
 

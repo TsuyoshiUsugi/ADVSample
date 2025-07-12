@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -8,7 +9,7 @@ using UnityEngine.Networking;
 namespace SkitSystem.Common
 {
     /// <summary>
-    /// リモートやローカルのCSVファイルを読み込み、データを配列に変換するクラス
+    ///     リモートやローカルのCSVファイルを読み込み、データを配列に変換するクラス
     /// </summary>
     public static class CsvLoader
     {
@@ -28,18 +29,19 @@ namespace SkitSystem.Common
 
         public static async UniTask<List<string[]>> GetLocalSpreadsheetDataAsync(string addressablePath)
         {
-            var csvFile = await Addressables.LoadAssetAsync<TextAsset>(addressablePath).Task; 
+            var csvFile = await Addressables.LoadAssetAsync<TextAsset>(addressablePath).Task;
             if (csvFile == null)
             {
                 Debug.LogError("Error: CSV file not found");
                 return null;
             }
+
             var parsedData = ParseData(csvFile.text);
             return parsedData;
         }
 
         /// <summary>
-        /// スプシのデータを配列に成形する。Listのインデックスは行、配列のインデックスは列を表す。
+        ///     スプシのデータを配列に成形する。Listのインデックスは行、配列のインデックスは列を表す。
         /// </summary>
         /// <param name="csvData"></param>
         /// <returns></returns>
@@ -47,7 +49,7 @@ namespace SkitSystem.Common
         {
             var rows =
                 csvData.Split(new[] { "\n" },
-                    System.StringSplitOptions.RemoveEmptyEntries); //スプレッドシートを1行ずつ配列に格納
+                    StringSplitOptions.RemoveEmptyEntries); //スプレッドシートを1行ずつ配列に格納
 
             return rows.Select(row => row.Split(',').Select(cell => cell.Trim()).ToArray()).ToList();
         }
