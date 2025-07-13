@@ -10,7 +10,7 @@ namespace SkitSystem
     {
         [SerializeField] private SkitSceneStarter _skitSceneStarter;
         [SerializeField] private SkitSceneDataContainer _skitSceneDataContainer;
-        private SkitSceneExecutor _skitSceneExecutor;
+        private SkitSceneManager _skitSceneManager;
         private CancellationToken _cancellationToken;
 
         private void Start()
@@ -34,8 +34,9 @@ namespace SkitSystem
         {
             _cancellationToken = this.GetCancellationTokenOnDestroy();
             await _skitSceneStarter.InitializeSkitSceneData();
-            _skitSceneExecutor = new SkitSceneExecutor();
-            //await _skitSceneExecutor.HandleSkitSceneData(_skitSceneDataContainer, _cancellationToken);
+
+            _skitSceneManager.OnStartSkitScene();
+            await _skitSceneManager.DoSkitSequence();
         }
     }
 }
