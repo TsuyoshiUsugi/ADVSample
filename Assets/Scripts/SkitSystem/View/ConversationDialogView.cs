@@ -6,7 +6,10 @@ using UnityEngine.UI;
 
 namespace SkitSystem.View
 {
-    public class ConversationView : MonoBehaviour
+    /// <summary>
+    /// スキットシーンの会話ダイアログを表示するためのビュー。
+    /// </summary>
+    public class ConversationDialogView : MonoBehaviour
     {
         [SerializeField] private Text _conversationText;
         [SerializeField] private Text _displayNameText;

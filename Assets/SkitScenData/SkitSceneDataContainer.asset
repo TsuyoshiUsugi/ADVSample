@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: SkitSceneDataContainer
   m_EditorClassIdentifier: 
   IsInitialized: 0
+  UseLanguage: 1

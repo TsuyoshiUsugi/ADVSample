@@ -62,11 +62,6 @@ namespace SkitSystem.Model.RawSkitDataConverter
                     currentGroup.AddConversation(conversation);
                 }
                 // else: id も空で currentGroup も null → スキップ
-
-                if (currentGroup != null)
-                {
-                    Debug.Log($"{currentGroup}");
-                }
             }
 
             return convertData.Cast<SkitSceneDataAbstractBase>().ToList();

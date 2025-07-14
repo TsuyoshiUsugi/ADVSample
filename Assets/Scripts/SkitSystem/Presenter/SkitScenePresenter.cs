@@ -13,7 +13,7 @@ namespace SkitSystem
     public class SkitScenePresenter : MonoBehaviour
     {
         [SerializeField] private SkitSceneStarter _skitSceneStarter;
-        [SerializeField] private ConversationView _conversationView; 
+        [SerializeField] private ConversationDialogView conversationDialogView; 
         [SerializeField] private SkitSceneManager _skitSceneManager;
         private SkitSceneInput _skitSceneInput;
 
@@ -54,7 +54,7 @@ namespace SkitSystem
                     conversationExecutor.CurrentConversationData.Subscribe(async x =>
                     {
                         if (x == null) return;
-                        await _conversationView.ShowConversation(x.TalkerName, x.Dialogue,
+                        await conversationDialogView.ShowConversation(x.TalkerName, x.Dialogue,
                             _skitSceneManager.CurrentCancellationToken.Token);
                     });
                 }
@@ -62,9 +62,9 @@ namespace SkitSystem
 
             _skitSceneInput.SkitSceneInputMap.Tap.performed += _ =>
             {
-                if (_conversationView.IsDisplaying)
+                if (conversationDialogView.IsDisplaying)
                 {
-                    _conversationView.ForceShowText();
+                    conversationDialogView.ForceShowText();
                 }
                 else
                 {
