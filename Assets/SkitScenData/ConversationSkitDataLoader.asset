@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Converter:
     rid: 5083283325274816771
-  RemoteSpreadSheetDataKey: https://docs.google.com/spreadsheets/d/e/2PACX-1vRTilhqmIkXpT7kMrg5xXJR0qgZ4HGii7fnxp3UeRtxgXzWDS6O3UNUOX-CQk3w7zeMVAub5TEmbRzN/pub?gid=0&single=true&output=csv
-  LocalAddressablePath: 
+  _remoteSpreadSheetDataKey: https://docs.google.com/spreadsheets/d/e/2PACX-1vRTilhqmIkXpT7kMrg5xXJR0qgZ4HGii7fnxp3UeRtxgXzWDS6O3UNUOX-CQk3w7zeMVAub5TEmbRzN/pub?output=csv
   references:
     version: 2
     RefIds:
     - rid: 5083283325274816771
       type: {class: ConvertToConversationData, ns: SkitSystem.Model.RawSkitDataConverter, asm: Assembly-CSharp}
-      data: 
+      data:
+        _sceneDataContainer: {fileID: 11400000, guid: 0b0e7efc4eb2eb74cb5ffa7b70d3e025, type: 2}

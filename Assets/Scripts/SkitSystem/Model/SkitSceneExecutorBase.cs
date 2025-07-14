@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using R3;
 using SkitSystem.Common;
 using SkitSystem.Model.SkitSceneData;
+using UnityEngine;
 
 namespace SkitSystem.Model
 {
@@ -19,7 +20,7 @@ namespace SkitSystem.Model
     public abstract class SkitSceneExecutorBase : IDisposable
     {
         public abstract string HandleSkitContextType { get; }
-        public UniTaskCompletionSource<string> AwaitForInput { get; protected set; }
+        public UniTaskCompletionSource<string> AwaitForInput { get; protected set; } = new UniTaskCompletionSource<string>();
 
         public abstract UniTask HandleSkitSceneData(SkitSceneDataAbstractBase skitSceneData, CancellationToken token);
 
@@ -33,7 +34,7 @@ namespace SkitSystem.Model
 
     public class ConversationExecutor : SkitSceneExecutorBase
     {
-        public override string HandleSkitContextType => nameof(ConversationData);
+        public override string HandleSkitContextType => nameof(ConversationGroupData);
         private readonly ReactiveProperty<ConversationData> _currentConversationData = new();
         public ReadOnlyReactiveProperty<ConversationData> CurrentConversationData => _currentConversationData;
         private ConversationGroupData _nextConversationGroupData;
@@ -45,6 +46,7 @@ namespace SkitSystem.Model
             foreach (var conversation in currentConversationGroup.ConversationData)
             {
                 _currentConversationData.Value = conversation;
+                Debug.Log(conversation.ToString());
                 await AwaitForInput.Task;
                 AwaitForInput = new UniTaskCompletionSource<string>();
                 //Todo 会話データのタグを処理する仕組みと次のSkitSceneDataAbstractBaseを設定する処理

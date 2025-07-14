@@ -15,9 +15,10 @@ namespace SkitSystem.Common
         [Header("生データの変換方法")] [SerializeReference] [SubclassSelector]
         public IRawSkitDataConverter Converter;
 
-        [Header("スプシのアドレス")] public string RemoteSpreadSheetDataKey = "";
+        [Header("スプシのアドレス")] [SerializeField]
+        private string _remoteSpreadSheetDataKey = "";
 
-        [Header("ローカルのAddressableのアドレス")] public string LocalAddressablePath = "";
+        [Header("ローカルのAddressableのアドレス")] private string _localAddressablePath = "";
 
 
         public async UniTask LoadSkitDataAsync(CancellationToken token, SkitSceneDataContainer skitSceneDataContainer,
@@ -25,13 +26,13 @@ namespace SkitSystem.Common
         {
             if (!isLoadRemoteData)
             {
-                var data = await CsvLoader.GetLocalSpreadsheetDataAsync(LocalAddressablePath);
+                var data = await CsvLoader.GetLocalSpreadsheetDataAsync(_localAddressablePath);
                 var convertedData = Converter.Convert(data);
                 if (convertedData != null) skitSceneDataContainer.AddSkitSceneData(Converter.ConvertDataType, convertedData);
             }
             else
             {
-                var data = await CsvLoader.GetRemoteSpreadsheetDataAsync(RemoteSpreadSheetDataKey);
+                var data = await CsvLoader.GetRemoteSpreadsheetDataAsync(_remoteSpreadSheetDataKey);
                 var convertedData = Converter.Convert(data);
                 if (convertedData != null) skitSceneDataContainer.AddSkitSceneData(Converter.ConvertDataType, convertedData);
             }

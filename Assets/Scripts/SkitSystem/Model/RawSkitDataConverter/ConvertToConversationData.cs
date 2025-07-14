@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SkitSystem.Common;
 using UnityEngine;
 
 namespace SkitSystem.Model.RawSkitDataConverter
@@ -8,6 +9,8 @@ namespace SkitSystem.Model.RawSkitDataConverter
     [Serializable]
     public class ConvertToConversationData : IRawSkitDataConverter
     {
+        [SerializeField] private SkitSceneDataContainer _sceneDataContainer;
+        
         public override string ConvertDataType => nameof(ConversationGroupData);
 
         public override List<SkitSceneDataAbstractBase> Convert(List<string[]> rawData)
@@ -39,8 +42,12 @@ namespace SkitSystem.Model.RawSkitDataConverter
                         showCharaDataList.Add(new ShowCharaData(charaName, charaEmote, standPos));
                     }
                 }
+                
+                var dialogue = _sceneDataContainer.UseLanguage == SkitSceneDataContainer.Language.Japanese
+                    ? dialogueJp
+                    : dialogueEn;
 
-                var conversation = new ConversationData(backgroundImageName, talkerName, dialogueJp, dialogueEn, showCharaDataList.ToArray());
+                var conversation = new ConversationData(backgroundImageName, talkerName, dialogue, showCharaDataList.ToArray());
 
                 if (!string.IsNullOrEmpty(id))
                 {

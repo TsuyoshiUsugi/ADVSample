@@ -20,14 +20,19 @@ namespace SkitSystem.Model
         private readonly Queue<SkitSceneDataAbstractBase> _skitContextQueue = new();
         private readonly List<SkitSceneExecutorBase> _skitContextHandlers = new();
         
+        public List<SkitSceneExecutorBase> SkitContextHandlers => _skitContextHandlers;
         public CancellationTokenSource CurrentCancellationToken { get; private set; }
         public event Func<UniTask> OnSkitEnd;
 
         /// <summary>
         /// 実際に処理を回す際に使うデータを設定する。現在のフラグ状態に応じて、スキットシーンデータを取得する。
         /// </summary>
-        public void OnStartSkitScene()
+        public void Initialize()
         {
+            //ハンドラーの準備
+            _skitContextHandlers.Add(new ConversationExecutor());
+            
+            //フラグから最初の会話データを取得
             string currentFlag = null;
             if (_skitSceneDataContainer.SkitSceneData.TryGetValue(nameof(FlagData), out var flagDataList))
             {
@@ -38,12 +43,16 @@ namespace SkitSystem.Model
                 currentFlag = flags
                     .FirstOrDefault(flag => flag.Flags.ContainsValue(true))?.CurrentFlag;
             }
-            
-            if (_skitSceneDataContainer.SkitSceneData.TryGetValue(nameof(ConversationGroupData), out var conversationGroupData))
+
+            if (_skitSceneDataContainer.SkitSceneData.TryGetValue(nameof(ConversationGroupData),
+                    out var conversationGroupData))
             {
-                var conversationData = conversationGroupData.FirstOrDefault(x => x is ConversationGroupData currentFlagConversationGroupData &&
-                                                                                 currentFlagConversationGroupData.Flag == currentFlag);
-                
+                var conversationData = conversationGroupData.FirstOrDefault(x =>
+                                           x is ConversationGroupData currentFlagConversationGroupData &&
+                                           // フラグに対応する会話データがない場合、最初の会話データを使用
+                                           currentFlagConversationGroupData.Flag == currentFlag) ??
+                                       conversationGroupData.FirstOrDefault(x => x is ConversationGroupData);
+
                 if (conversationData != null)
                 {
                     _skitContextQueue.Enqueue(conversationData);
@@ -56,6 +65,7 @@ namespace SkitSystem.Model
             CancelSkitSequence();
             while (_skitContextQueue.Count > 0)
             {
+                var currentCount = _skitContextQueue.Count;
                 var currentSkitContext = _skitContextQueue.Peek();
                 if (currentSkitContext == null)
                 {
@@ -64,7 +74,14 @@ namespace SkitSystem.Model
                     continue;
                 }
 
-                var handleSkitContextType = nameof(currentSkitContext);
+                var handleSkitContextType = currentSkitContext.GetType().Name;
+                Debug.Log(handleSkitContextType);
+
+                foreach (var handler in _skitContextHandlers)
+                {
+                    Debug.Log(handler.HandleSkitContextType);
+                }
+                
                 foreach (var skitContextHandler in _skitContextHandlers.Where(skitContextHandler =>
                              skitContextHandler.HandleSkitContextType == handleSkitContextType))
                 {
@@ -77,6 +94,12 @@ namespace SkitSystem.Model
                     {
                         _skitContextQueue.Enqueue(nextSkitContextQueue);
                     }
+                }
+                
+                if (currentCount == _skitContextQueue.Count)
+                {
+                    Debug.LogWarning("スキットコンテキストの数が変わらないため、無限ループの可能性があります。処理を中断します。");
+                    break; // 無限ループを防ぐために中断
                 }
             }
 

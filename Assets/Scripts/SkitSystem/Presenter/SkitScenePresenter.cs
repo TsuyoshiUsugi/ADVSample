@@ -1,17 +1,27 @@
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using SkitSystem.Common;
 using SkitSystem.Model;
+using SkitSystem.View;
 using UnityEngine;
+using R3;
+using UnityEngine.InputSystem;
 
 namespace SkitSystem
 {
     public class SkitScenePresenter : MonoBehaviour
     {
         [SerializeField] private SkitSceneStarter _skitSceneStarter;
-        [SerializeField] private SkitSceneDataContainer _skitSceneDataContainer;
-        private SkitSceneManager _skitSceneManager;
-        private CancellationToken _cancellationToken;
+        [SerializeField] private ConversationView _conversationView; 
+        [SerializeField] private SkitSceneManager _skitSceneManager;
+        private SkitSceneInput _skitSceneInput;
+
+        private void OnEnable()
+        {
+            _skitSceneInput = new SkitSceneInput();
+            _skitSceneInput.Enable();
+        }
 
         private void Start()
         {
@@ -32,11 +42,44 @@ namespace SkitSystem
         /// </summary>
         private async UniTask InitializeAsync()
         {
-            _cancellationToken = this.GetCancellationTokenOnDestroy();
+            // modelの初期化
             await _skitSceneStarter.InitializeSkitSceneData();
+            _skitSceneManager.Initialize();
+            
+            //viewの初期化
+            foreach (var handler in _skitSceneManager.SkitContextHandlers)
+            {
+                if (handler is ConversationExecutor conversationExecutor)
+                {
+                    conversationExecutor.CurrentConversationData.Subscribe(async x =>
+                    {
+                        if (x == null) return;
+                        await _conversationView.ShowConversation(x.TalkerName, x.Dialogue,
+                            _skitSceneManager.CurrentCancellationToken.Token);
+                    });
+                }
+            }
 
-            _skitSceneManager.OnStartSkitScene();
+            _skitSceneInput.SkitSceneInputMap.Tap.performed += _ =>
+            {
+                foreach (var handler in _skitSceneManager.SkitContextHandlers)
+                {
+                    if (handler is ConversationExecutor conversationExecutor)
+                    {
+                        conversationExecutor.AwaitForInput.TrySetResult("Input received");
+                    }
+                }
+                Debug.Log("タップ入力");
+            };
+            
+            // スキットシーンの実行を開始
             await _skitSceneManager.DoSkitSequence();
+        }
+        
+        private void OnDisable()
+        {
+            _skitSceneInput?.Dispose();
+            _skitSceneInput = null;
         }
     }
 }

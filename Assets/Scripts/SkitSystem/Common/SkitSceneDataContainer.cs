@@ -7,8 +7,17 @@ namespace SkitSystem.Common
     [CreateAssetMenu(fileName = "SkitSceneDataContainer", menuName = "SkitSystem/SkitSceneDataContainer")]
     public class SkitSceneDataContainer : ScriptableObject
     {
+        public enum Language
+        {
+            Japanese,
+            English,
+            Chinese,
+            Korean
+        }
+        
         [Header("スキットシーンのデータが初期化されているかどうか")] public bool IsInitialized;
-
+        [Header("使用する言語")] public Language UseLanguage;
+        
         /// <summary>
         ///     スキットシーンのデータを保持するコンテナ
         /// </summary>

@@ -15,6 +15,12 @@ namespace SkitSystem.Common
     {
         public static async UniTask<List<string[]>> GetRemoteSpreadsheetDataAsync(string url)
         {
+            if (string.IsNullOrEmpty(url))
+            {
+                Debug.LogError("Error: URL is null or empty");
+                return null;
+            }
+            
             using var request = UnityWebRequest.Get(url);
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
@@ -29,6 +35,12 @@ namespace SkitSystem.Common
 
         public static async UniTask<List<string[]>> GetLocalSpreadsheetDataAsync(string addressablePath)
         {
+            if (string.IsNullOrEmpty(addressablePath))
+            {
+                Debug.LogError("Error: Addressable path is null or empty");
+                return null;
+            }
+            
             var csvFile = await Addressables.LoadAssetAsync<TextAsset>(addressablePath).Task;
             if (csvFile == null)
             {
