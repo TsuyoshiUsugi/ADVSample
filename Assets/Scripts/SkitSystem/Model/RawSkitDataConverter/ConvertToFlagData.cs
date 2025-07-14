@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using SkitSystem.Model.SkitSceneData;
-using UnityEngine;
 
 namespace SkitSystem.Model.RawSkitDataConverter
 {
@@ -11,7 +10,7 @@ namespace SkitSystem.Model.RawSkitDataConverter
         public override string ConvertDataType => "FlagData";
 
         /// <summary>
-        /// スキットデータを変換するインターフェース。
+        ///     スキットデータを変換するインターフェース。
         /// </summary>
         /// <param name="rawData">生データ</param>
         /// <returns>変換後のデータ</returns>
@@ -27,7 +26,7 @@ namespace SkitSystem.Model.RawSkitDataConverter
 
                 flagData.Flags[flagName] = flagValue;
             }
-            
+
             return new List<SkitSceneDataAbstractBase> { flagData };
         }
     }

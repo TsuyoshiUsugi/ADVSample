@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using R3;
-using SkitSystem.Common;
-using SkitSystem.Model.SkitSceneData;
 using UnityEngine;
 
 namespace SkitSystem.Model
@@ -20,29 +16,30 @@ namespace SkitSystem.Model
     public abstract class SkitSceneExecutorBase : IDisposable
     {
         public abstract string HandleSkitContextType { get; }
-        public UniTaskCompletionSource<string> AwaitForInput { get; protected set; } = new UniTaskCompletionSource<string>();
-
-        public abstract UniTask HandleSkitSceneData(SkitSceneDataAbstractBase skitSceneData, CancellationToken token);
-
-        public abstract bool TrtGetNextSkitSceneData(out SkitSceneDataAbstractBase nextSkitContextQueue);
+        public UniTaskCompletionSource<string> AwaitForInput { get; protected set; } = new();
 
         public void Dispose()
         {
             // TODO マネージリソースをここで解放します
         }
+
+        public abstract UniTask HandleSkitSceneData(SkitSceneDataAbstractBase skitSceneData, CancellationToken token);
+
+        public abstract bool TrtGetNextSkitSceneData(out SkitSceneDataAbstractBase nextSkitContextQueue);
     }
 
     public class ConversationExecutor : SkitSceneExecutorBase
     {
-        public override string HandleSkitContextType => nameof(ConversationGroupData);
         private readonly ReactiveProperty<ConversationData> _currentConversationData = new();
-        public ReadOnlyReactiveProperty<ConversationData> CurrentConversationData => _currentConversationData;
         private ConversationGroupData _nextConversationGroupData;
-        
-        public override async UniTask HandleSkitSceneData(SkitSceneDataAbstractBase skitSceneData, CancellationToken token)
+        public override string HandleSkitContextType => nameof(ConversationGroupData);
+        public ReadOnlyReactiveProperty<ConversationData> CurrentConversationData => _currentConversationData;
+
+        public override async UniTask HandleSkitSceneData(SkitSceneDataAbstractBase skitSceneData,
+            CancellationToken token)
         {
             if (skitSceneData is not ConversationGroupData currentConversationGroup) return;
-            
+
             foreach (var conversation in currentConversationGroup.ConversationData)
             {
                 _currentConversationData.Value = conversation;

@@ -6,36 +6,49 @@ using Cysharp.Threading.Tasks;
 using R3;
 using SkitSystem.Common;
 using SkitSystem.Model.SkitSceneData;
-using SkitSystem.View;
 using UnityEngine;
 
 namespace SkitSystem.Model
 {
     /// <summary>
-    /// 会話シーンの進行を処理するクラス
+    ///     会話シーンの進行を処理するクラス
     /// </summary>
     public class SkitSceneManager : MonoBehaviour
     {
         [SerializeField] private SkitSceneDataContainer _skitSceneDataContainer;
-        
+
         private readonly Queue<SkitSceneDataAbstractBase> _skitContextQueue = new();
-        private readonly List<SkitSceneExecutorBase> _skitContextHandlers = new();
-        
-        private CancellationTokenSource _masterCancellationTokenSource;
         private CompositeDisposable _cancellationDisposables = new();
-        
-        public List<SkitSceneExecutorBase> SkitContextHandlers => _skitContextHandlers;
+
+        private CancellationTokenSource _masterCancellationTokenSource;
+
+        public List<SkitSceneExecutorBase> SkitContextHandlers { get; } = new();
+
         public CancellationTokenSource CurrentCancellationToken { get; private set; }
+
+        private void Start()
+        {
+            _masterCancellationTokenSource = new CancellationTokenSource();
+            CurrentCancellationToken = new CancellationTokenSource();
+        }
+
+        private void OnDestroy()
+        {
+            CancelAllSkitOperations();
+            _masterCancellationTokenSource?.Dispose();
+            CurrentCancellationToken?.Dispose();
+        }
+
         public event Func<UniTask> OnSkitEnd;
 
         /// <summary>
-        /// 実際に処理を回す際に使うデータを設定する。現在のフラグ状態に応じて、スキットシーンデータを取得する。
+        ///     実際に処理を回す際に使うデータを設定する。現在のフラグ状態に応じて、スキットシーンデータを取得する。
         /// </summary>
         public void Initialize()
         {
             //ハンドラーの準備
-            _skitContextHandlers.Add(new ConversationExecutor());
-            
+            SkitContextHandlers.Add(new ConversationExecutor());
+
             //フラグから最初の会話データを取得
             string currentFlag = null;
             if (_skitSceneDataContainer.SkitSceneData.TryGetValue(nameof(FlagData), out var flagDataList))
@@ -43,7 +56,7 @@ namespace SkitSystem.Model
                 var flags = flagDataList
                     .OfType<FlagData>()
                     .ToList();
-                
+
                 currentFlag = flags
                     .FirstOrDefault(flag => flag.Flags.ContainsValue(true))?.CurrentFlag;
             }
@@ -57,17 +70,14 @@ namespace SkitSystem.Model
                                            currentFlagConversationGroupData.Flag == currentFlag) ??
                                        conversationGroupData.FirstOrDefault(x => x is ConversationGroupData);
 
-                if (conversationData != null)
-                {
-                    _skitContextQueue.Enqueue(conversationData);
-                }
+                if (conversationData != null) _skitContextQueue.Enqueue(conversationData);
             }
         }
 
         public async UniTask DoSkitSequence()
         {
             CancelSkitSequence();
-            
+
             try
             {
                 // マスターキャンセルトークンを使用
@@ -75,7 +85,7 @@ namespace SkitSystem.Model
                     _masterCancellationTokenSource.Token,
                     CurrentCancellationToken.Token
                 );
-                
+
                 await ExecuteSkitSequence(linkedToken.Token);
             }
             catch (OperationCanceledException)
@@ -83,13 +93,13 @@ namespace SkitSystem.Model
                 Debug.Log("スキットシーケンスがキャンセルされました");
             }
         }
-        
+
         private async UniTask ExecuteSkitSequence(CancellationToken token)
         {
             while (_skitContextQueue.Count > 0)
             {
                 token.ThrowIfCancellationRequested();
-                
+
                 var currentCount = _skitContextQueue.Count;
                 var currentSkitContext = _skitContextQueue.Peek();
                 if (currentSkitContext == null)
@@ -102,12 +112,9 @@ namespace SkitSystem.Model
                 var handleSkitContextType = currentSkitContext.GetType().Name;
                 Debug.Log(handleSkitContextType);
 
-                foreach (var handler in _skitContextHandlers)
-                {
-                    Debug.Log(handler.HandleSkitContextType);
-                }
-                
-                foreach (var skitContextHandler in _skitContextHandlers.Where(skitContextHandler =>
+                foreach (var handler in SkitContextHandlers) Debug.Log(handler.HandleSkitContextType);
+
+                foreach (var skitContextHandler in SkitContextHandlers.Where(skitContextHandler =>
                              skitContextHandler.HandleSkitContextType == handleSkitContextType))
                 {
                     // 現在のコンテキストを処理し、デキュー
@@ -115,11 +122,9 @@ namespace SkitSystem.Model
 
                     // 次のスキットコンテキストがある場合、エンキュー
                     if (skitContextHandler.TrtGetNextSkitSceneData(out var nextSkitContextQueue))
-                    {
                         _skitContextQueue.Enqueue(nextSkitContextQueue);
-                    }
                 }
-                
+
                 if (currentCount == _skitContextQueue.Count)
                 {
                     Debug.LogWarning("スキットコンテキストの数が変わらないため、無限ループの可能性があります。処理を中断します。");
@@ -127,52 +132,36 @@ namespace SkitSystem.Model
                 }
             }
 
-            if (OnSkitEnd != null)
-            {
-                await OnSkitEnd.Invoke();
-            }
+            if (OnSkitEnd != null) await OnSkitEnd.Invoke();
         }
 
         /// <summary>
-        /// 一括キャンセル処理（全体停止）
+        ///     一括キャンセル処理（全体停止）
         /// </summary>
         public void CancelAllSkitOperations()
         {
             Debug.Log("一括キャンセル処理を開始");
-            
+
             // 1. 全ての進行中の処理をキャンセル
             _masterCancellationTokenSource?.Cancel();
             CurrentCancellationToken?.Cancel();
-            
+
             // 2. 全ての購読を解除
             _cancellationDisposables?.Dispose();
-            _skitContextHandlers?.ForEach(handler => handler.Dispose());
-            _skitContextHandlers?.Clear();
-            
+            SkitContextHandlers?.ForEach(handler => handler.Dispose());
+            SkitContextHandlers?.Clear();
+
             // 3. 新しいトークンソースを作成
             _masterCancellationTokenSource = new CancellationTokenSource();
             CurrentCancellationToken = new CancellationTokenSource();
             _cancellationDisposables = new CompositeDisposable();
         }
-        
+
         private void CancelSkitSequence()
         {
             CurrentCancellationToken?.Cancel();
-            _skitContextHandlers.ToList().ForEach(handler => handler.Dispose());
+            SkitContextHandlers.ToList().ForEach(handler => handler.Dispose());
             CurrentCancellationToken = new CancellationTokenSource();
-        }
-        
-        private void Start()
-        {
-            _masterCancellationTokenSource = new CancellationTokenSource();
-            CurrentCancellationToken = new CancellationTokenSource();
-        }
-        
-        private void OnDestroy()
-        {
-            CancelAllSkitOperations();
-            _masterCancellationTokenSource?.Dispose();
-            CurrentCancellationToken?.Dispose();
         }
     }
 }

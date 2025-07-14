@@ -11,6 +11,7 @@ namespace SkitSystem.Model
         [SerializeField] private bool _loadRemoteData = true;
         [SerializeField] private List<SkitDataLoader> _skitDataLoaders = new();
         [SerializeField] private SkitSceneDataContainer _skitSceneDataContainer;
+        [SerializeField] private string _skitSceneImageAddressablePath = "SkitScene";
 
         # region シーン開始時にスキットデータを初期化する
 
@@ -23,14 +24,16 @@ namespace SkitSystem.Model
 
         public async UniTask InitializeSkitSceneData()
         {
-            if (_skitSceneDataContainer.IsInitialized)
-            {
-                return;
-            }
+            if (_skitSceneDataContainer.IsInitialized) return;
 
+            // スキットシーンデータのロード
             foreach (var skitDataLoader in _skitDataLoaders)
                 await skitDataLoader.LoadSkitDataAsync(destroyCancellationToken, _skitSceneDataContainer,
                     _loadRemoteData);
+
+            // スキットシーンのスプライトをロード
+            await _skitSceneDataContainer.LoadSkitSceneAssetsAsync();
+
             _skitSceneDataContainer.IsInitialized = true;
         }
 

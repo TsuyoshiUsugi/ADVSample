@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace SkitSystem.View
 {
     /// <summary>
-    /// スキットシーンの会話ダイアログを表示するためのビュー。
+    ///     スキットシーンの会話ダイアログを表示するためのビュー。
     /// </summary>
     public class ConversationDialogView : MonoBehaviour
     {
@@ -15,10 +15,10 @@ namespace SkitSystem.View
         [SerializeField] private Text _displayNameText;
         [SerializeField] private float _textDisplayDuration = 2f;
 
-        public bool IsDisplaying { get; private set; }
-
         private string _currentConversation;
         private CancellationTokenSource _internalCts;
+
+        public bool IsDisplaying { get; private set; }
 
         public async UniTask ShowConversation(string talkerName, string conversation, CancellationToken token)
         {
@@ -33,7 +33,9 @@ namespace SkitSystem.View
 
                 _currentConversation = conversation ?? string.Empty;
 
-                float charaTweenDur = string.IsNullOrEmpty(_currentConversation) ? 0f : _textDisplayDuration / _currentConversation.Length;
+                var charaTweenDur = string.IsNullOrEmpty(_currentConversation)
+                    ? 0f
+                    : _textDisplayDuration / _currentConversation.Length;
 
                 foreach (var chara in _currentConversation)
                 {
@@ -44,7 +46,6 @@ namespace SkitSystem.View
             catch (OperationCanceledException)
             {
                 // 中断されたらその場で終了（ForceShowTextではない）
-                return;
             }
             finally
             {

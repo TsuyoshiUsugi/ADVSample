@@ -10,14 +10,14 @@ namespace SkitSystem.Model.RawSkitDataConverter
     public class ConvertToConversationData : IRawSkitDataConverter
     {
         [SerializeField] private SkitSceneDataContainer _sceneDataContainer;
-        
+
         public override string ConvertDataType => nameof(ConversationGroupData);
 
         public override List<SkitSceneDataAbstractBase> Convert(List<string[]> rawData)
         {
             var convertData = new List<ConversationGroupData>();
             ConversationGroupData currentGroup = null;
-            
+
             rawData.RemoveAt(0); // ヘッダー行を削除
             foreach (var data in rawData)
             {
@@ -33,7 +33,6 @@ namespace SkitSystem.Model.RawSkitDataConverter
                 // 表示キャラデータを収集
                 var showCharaDataList = new List<ShowCharaData>();
                 for (var i = 6; i < data.Length; i += 3)
-                {
                     if (i + 2 < data.Length)
                     {
                         var charaName = data[i];
@@ -41,13 +40,13 @@ namespace SkitSystem.Model.RawSkitDataConverter
                         var standPos = data[i + 2];
                         showCharaDataList.Add(new ShowCharaData(charaName, charaEmote, standPos));
                     }
-                }
-                
+
                 var dialogue = _sceneDataContainer.UseLanguage == SkitSceneDataContainer.Language.Japanese
                     ? dialogueJp
                     : dialogueEn;
 
-                var conversation = new ConversationData(backgroundImageName, talkerName, dialogue, showCharaDataList.ToArray());
+                var conversation = new ConversationData(backgroundImageName, talkerName, dialogue,
+                    showCharaDataList.ToArray());
 
                 if (!string.IsNullOrEmpty(id))
                 {
