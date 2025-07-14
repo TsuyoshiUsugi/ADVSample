@@ -36,6 +36,14 @@ A sophisticated conversation and dialogue system for Unity, designed for visual 
 - Character-by-character text display
 - Tap to instantly show full text
 
+### 🎭 キャラクター・背景表示 / Character & Background Display
+- キャラクター画像の動的読み込み
+- 背景画像の自動切り替え
+- 画面遷移時のフェード処理
+- Dynamic character image loading
+- Automatic background switching
+- Fade transitions between scenes
+
 ## システム構成 / System Architecture
 
 ### MVP パターン / MVP Pattern
@@ -57,7 +65,9 @@ A sophisticated conversation and dialogue system for Unity, designed for visual 
 
 #### プレゼンテーション / Presentation
 - `SkitScenePresenter`: メインプレゼンター
-- `ConversationView`: 会話UI表示
+- `ConversationDialogView`: 会話UI表示
+- `ConversationCharaImageAndBackgroundView`: キャラクター・背景表示
+- `SkitSceneFader`: 画面フェード処理
 - `SkitSceneStarter`: システム初期化
 
 ### データ構造 / Data Structure
@@ -138,8 +148,10 @@ Assets/
 │   └── SkitSystem/               # メインシステム
 │       ├── Common/               # 共通コンポーネント
 │       ├── Model/                # データモデル
+│       │   ├── RawSkitDataConverter/ # データ変換処理
+│       │   └── SkitSceneData/    # 会話データ構造
 │       ├── Presenter/            # プレゼンター
-│       └── View/                 # UI表示
+│       └── View/                 # UI表示・フェード処理
 ├── Prefab/                       # プレハブ
 ├── Scenes/                       # サンプルシーン
 └── SkitScenData/                 # 会話データ
@@ -148,21 +160,17 @@ Assets/
 ## 開発メモ / Development Notes
 
 ### 最近の更新 / Recent Updates
+- 画面遷移時のFade処理を実装
+- キャラクター画像の動的読み込み機能を追加
+- 背景画像の自動切り替え機能を実装
+- 画像アドレス付与機能を追加
 - 会話再生機能の実装
 - タップ進行処理の改善
-- UIの統合とモデル処理の完了
 
 ### 今後の課題 / Future Tasks
+- 終了時のFade処理の実装
+- ログ機能の追加
+- オート再生機能の実装
 - パフォーマンス最適化
-- 追加のアニメーション効果
 - エラーハンドリングの強化
 
-## ライセンス / License
-
-このプロジェクトは個人・商用利用可能です。
-This project is available for personal and commercial use.
-
-## 貢献 / Contributing
-
-プルリクエストやイシューの報告を歓迎します。
-Pull requests and issue reports are welcome.
