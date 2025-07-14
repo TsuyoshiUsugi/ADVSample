@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using R3;
+using SkitSystem.Common;
 using SkitSystem.Model;
 using SkitSystem.View;
 using UnityEngine;
@@ -8,9 +9,13 @@ namespace SkitSystem
 {
     public class SkitScenePresenter : MonoBehaviour
     {
+        [Header("Skitシーンのモデル")]
         [SerializeField] private SkitSceneStarter _skitSceneStarter;
-        [SerializeField] private ConversationDialogView conversationDialogView;
         [SerializeField] private SkitSceneManager _skitSceneManager;
+        [SerializeField] private SkitSceneDataContainer _skitSceneDataContainer;
+        [Header("Skitシーンのビュー")]
+        [SerializeField] private ConversationDialogView _conversationDialogView;
+        [SerializeField] private ConversationCharaImageAndBackgroundView _conversationCharaImageAndBackgroundView;
         private SkitSceneInput _skitSceneInput;
 
         private void Start()
@@ -48,20 +53,32 @@ namespace SkitSystem
             await _skitSceneStarter.InitializeSkitSceneData();
             _skitSceneManager.Initialize();
 
-            //viewの初期化
+            //会話シーンの画面表示処理の関連づけ
             foreach (var handler in _skitSceneManager.SkitContextHandlers)
                 if (handler is ConversationExecutor conversationExecutor)
-                    conversationExecutor.CurrentConversationData.Subscribe(async x =>
+                    conversationExecutor.CurrentConversationData.Subscribe(async conversationData =>
                     {
-                        if (x == null) return;
-                        await conversationDialogView.ShowConversation(x.TalkerName, x.Dialogue,
+                        if (conversationData == null) return;
+                        _conversationCharaImageAndBackgroundView.ResetImages();
+
+                        _conversationCharaImageAndBackgroundView.ShowBackground(_skitSceneDataContainer.GetSpriteByFileName(conversationData.BackgroundImageName));
+                        foreach (var showCharaData in conversationData.ShowCharaDataList)
+                        {
+                            _conversationCharaImageAndBackgroundView.ShowCharacter(
+                                _skitSceneDataContainer.GetCharaSpriteByEmotion(showCharaData.CharaEmote, showCharaData.CharaEmote),
+                                showCharaData.StandPos);
+                        }
+                        
+                        //文字送り
+                        await _conversationDialogView.ShowConversation(conversationData.TalkerName, conversationData.Dialogue,
                             _skitSceneManager.CurrentCancellationToken.Token);
                     });
 
+            //マウスクリック等されたとき
             _skitSceneInput.SkitSceneInputMap.Tap.performed += _ =>
             {
-                if (conversationDialogView.IsDisplaying)
-                    conversationDialogView.ForceShowText();
+                if (_conversationDialogView.IsDisplaying)
+                    _conversationDialogView.ForceShowText();
                 else
                     foreach (var handler in _skitSceneManager.SkitContextHandlers)
                         if (handler is ConversationExecutor conversationExecutor)

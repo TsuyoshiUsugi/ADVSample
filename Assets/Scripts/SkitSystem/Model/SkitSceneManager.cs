@@ -22,8 +22,8 @@ namespace SkitSystem.Model
 
         private CancellationTokenSource _masterCancellationTokenSource;
 
+        
         public List<SkitSceneExecutorBase> SkitContextHandlers { get; } = new();
-
         public CancellationTokenSource CurrentCancellationToken { get; private set; }
 
         private void Start()

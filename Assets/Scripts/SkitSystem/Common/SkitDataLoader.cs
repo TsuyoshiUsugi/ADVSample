@@ -17,7 +17,7 @@ namespace SkitSystem.Common
 
         [Header("スプシのアドレス")] [SerializeField] private string _remoteSpreadSheetDataKey = "";
 
-        [Header("ローカルのAddressableのアドレス")] private readonly string _localAddressablePath = "";
+        [Header("ローカルのAddressableのアドレス")] [SerializeField] private string _localAddressablePath = "";
 
 
         public async UniTask LoadSkitDataAsync(CancellationToken token, SkitSceneDataContainer skitSceneDataContainer,

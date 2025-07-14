@@ -28,20 +28,28 @@ namespace SkitSystem.View
                 _backgroundImage.enabled = backgroundSprite;
             }
         }
+        
+        public void ResetImages()
+        {
+            _backgroundImage.sprite = null;
+            _characterImageLeft.sprite = null;
+            _characterImageCenter.sprite = null;
+            _characterImageRight.sprite = null;
+        }
 
-        public void ShowCharacter(Sprite characterSprite, CharacterPosition position)
+        public void ShowCharacter(Sprite characterSprite, string position)
         {
             switch (position)
             {
-                case CharacterPosition.Left:
+                case "左":
                     _characterImageLeft.sprite = characterSprite;
                     _characterImageLeft.enabled = characterSprite;
                     break;
-                case CharacterPosition.Center:
+                case "真ん中":
                     _characterImageCenter.sprite = characterSprite;
                     _characterImageCenter.enabled = characterSprite;
                     break;
-                case CharacterPosition.Right:
+                case "右":
                     _characterImageRight.sprite = characterSprite;
                     _characterImageRight.enabled = characterSprite;
                     break;

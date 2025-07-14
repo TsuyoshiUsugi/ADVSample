@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using SkitSystem.Model;
+using SkitSystem.Model.SkitSceneData;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -56,9 +57,37 @@ namespace SkitSystem.Common
         /// <summary>
         ///     名前指定で Sprite を取得
         /// </summary>
-        public Sprite GetSprite(string spriteName)
+        public Sprite GetSpriteByFileName(string spriteName)
         {
             return SpriteDictionary.GetValueOrDefault(spriteName);
+        }
+        
+        public Sprite GetCharaSpriteByEmotion(string characterName, string emotion)
+        {
+            // キャラクター名と感情を組み合わせてスプライト名を生成
+            if (SkitSceneData.TryGetValue(nameof(SkitSceneGeneralSettingsData), out var generalSettingsDataList) &&
+                generalSettingsDataList.FirstOrDefault() is SkitSceneGeneralSettingsData generalSettingsData)
+            {
+                // スプライト名のフォーマットを取得
+                if (generalSettingsData.CharaImageDictionary.TryGetValue(characterName, out var emoteSpriteMap))
+                {
+                    if (emoteSpriteMap.TryGetValue(emotion, out var spriteName))
+                    {
+                        // スプライト名からスプライトを取得
+                        return GetSpriteByFileName(spriteName);
+                    }
+                }
+                else
+                {
+                    Debug.LogError($"キャラクター名 '{characterName}' に対応するスプライト名が見つかりません。");
+                }
+            }
+            else
+            {
+                Debug.LogError("SkitSceneGeneralSettingsData が見つかりませんでした。");
+            }
+            
+            return null;
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ namespace SkitSystem.Model.RawSkitDataConverter
     [Serializable]
     public class ConvertToFlagData : IRawSkitDataConverter
     {
-        public override string ConvertDataType => "FlagData";
+        public override string ConvertDataType => nameof(FlagData);
 
         /// <summary>
         ///     スキットデータを変換するインターフェース。
