@@ -62,13 +62,21 @@ namespace SkitSystem
 
             _skitSceneInput.SkitSceneInputMap.Tap.performed += _ =>
             {
-                foreach (var handler in _skitSceneManager.SkitContextHandlers)
+                if (_conversationView.IsDisplaying)
                 {
-                    if (handler is ConversationExecutor conversationExecutor)
+                    _conversationView.ForceShowText();
+                }
+                else
+                {
+                    foreach (var handler in _skitSceneManager.SkitContextHandlers)
                     {
-                        conversationExecutor.AwaitForInput.TrySetResult("Input received");
+                        if (handler is ConversationExecutor conversationExecutor)
+                        {
+                            conversationExecutor.AwaitForInput.TrySetResult("Input received");
+                        }
                     }
                 }
+                
                 Debug.Log("タップ入力");
             };
             

@@ -11,38 +11,52 @@ namespace SkitSystem.View
         [SerializeField] private Text _conversationText;
         [SerializeField] private Text _displayNameText;
         [SerializeField] private float _textDisplayDuration = 2f;
-        
+
+        public bool IsDisplaying { get; private set; }
+
+        private string _currentConversation;
+        private CancellationTokenSource _internalCts;
+
         public async UniTask ShowConversation(string talkerName, string conversation, CancellationToken token)
         {
+            IsDisplaying = true;
+            _internalCts?.Cancel(); // 前の表示があればキャンセル
+            _internalCts = CancellationTokenSource.CreateLinkedTokenSource(token);
+
             try
             {
-                if (conversation == null)
-                {
-                    _conversationText.text = string.Empty;
-                    return;
-                }
-
-                if (talkerName == null)
-                {
-                    _displayNameText.text = string.Empty;
-                    return;
-                }
-                _displayNameText.text = talkerName;
+                _displayNameText.text = talkerName ?? string.Empty;
                 _conversationText.text = string.Empty;
-                var charaTweenDur = string.IsNullOrEmpty(conversation) ? 0 : _textDisplayDuration / conversation.Length;
 
-                foreach (var chara in conversation)
+                _currentConversation = conversation ?? string.Empty;
+
+                float charaTweenDur = string.IsNullOrEmpty(_currentConversation) ? 0f : _textDisplayDuration / _currentConversation.Length;
+
+                foreach (var chara in _currentConversation)
                 {
                     _conversationText.text += chara;
-                    await UniTask.Delay(TimeSpan.FromSeconds(charaTweenDur), cancellationToken: token);
+                    await UniTask.Delay(TimeSpan.FromSeconds(charaTweenDur), cancellationToken: _internalCts.Token);
                 }
             }
             catch (OperationCanceledException)
             {
-                // キャンセルされた場合、全文を即座に表示
-                _conversationText.text = conversation;
+                // 中断されたらその場で終了（ForceShowTextではない）
+                return;
+            }
+            finally
+            {
+                IsDisplaying = false;
             }
         }
 
+        public void ForceShowText()
+        {
+            if (string.IsNullOrEmpty(_currentConversation)) return;
+
+            // 現在の表示をすぐ終わらせ、全文表示
+            _internalCts?.Cancel(); // 表示中のアニメーションを止める
+            _conversationText.text = _currentConversation;
+            IsDisplaying = false;
+        }
     }
 }
