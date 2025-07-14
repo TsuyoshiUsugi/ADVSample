@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SkitSystem.Common;
+using SkitSystem.Model.SkitSceneData;
 using UnityEngine;
 
 namespace SkitSystem.Model.RawSkitDataConverter
@@ -17,6 +18,14 @@ namespace SkitSystem.Model.RawSkitDataConverter
         {
             var convertData = new List<ConversationGroupData>();
             ConversationGroupData currentGroup = null;
+
+            var charaNameMap = new Dictionary<string, Dictionary<string, string>>();
+            if (_sceneDataContainer.SkitSceneData.TryGetValue(nameof(SkitSceneGeneralSettingsData),
+                    out var generalSettingsDataList))
+            {
+                charaNameMap = generalSettingsDataList.OfType<SkitSceneGeneralSettingsData>().FirstOrDefault()
+                    ?.CharaNameLanguageMap;
+            }
 
             rawData.RemoveAt(0); // ヘッダー行を削除
             foreach (var data in rawData)
@@ -44,6 +53,13 @@ namespace SkitSystem.Model.RawSkitDataConverter
                 var dialogue = _sceneDataContainer.UseLanguage == SkitSceneDataContainer.Language.Japanese
                     ? dialogueJp
                     : dialogueEn;
+
+                if (charaNameMap != null && !string.IsNullOrEmpty(talkerName))
+                {
+                    talkerName = _sceneDataContainer.UseLanguage == SkitSceneDataContainer.Language.Japanese
+                        ? talkerName
+                        : charaNameMap[talkerName].GetValueOrDefault(nameof(SkitSceneDataContainer.Language.English), talkerName);
+                }
 
                 var conversation = new ConversationData(backgroundImageName, talkerName, dialogue,
                     showCharaDataList.ToArray());

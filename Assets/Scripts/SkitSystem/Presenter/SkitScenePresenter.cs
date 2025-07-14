@@ -31,6 +31,7 @@ namespace SkitSystem
 
         private void OnDisable()
         {
+            _skitSceneDataContainer?.Unload();
             _skitSceneInput?.Dispose();
             _skitSceneInput = null;
         }
@@ -65,7 +66,7 @@ namespace SkitSystem
                         foreach (var showCharaData in conversationData.ShowCharaDataList)
                         {
                             _conversationCharaImageAndBackgroundView.ShowCharacter(
-                                _skitSceneDataContainer.GetCharaSpriteByEmotion(showCharaData.CharaEmote, showCharaData.CharaEmote),
+                                _skitSceneDataContainer.GetCharaSpriteByEmotion(showCharaData.CharaName, showCharaData.CharaEmote),
                                 showCharaData.StandPos);
                         }
                         

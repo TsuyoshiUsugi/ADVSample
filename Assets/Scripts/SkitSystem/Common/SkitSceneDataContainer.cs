@@ -31,8 +31,6 @@ namespace SkitSystem.Common
         /// </summary>
         public Dictionary<string, List<SkitSceneDataAbstractBase>> SkitSceneData { get; private set; }
 
-        public Dictionary<string, Sprite> SkitSceneImage { get; private set; }
-
         public void AddSkitSceneData(string key, List<SkitSceneDataAbstractBase> data)
         {
             SkitSceneData ??= new Dictionary<string, List<SkitSceneDataAbstractBase>>();
@@ -68,6 +66,15 @@ namespace SkitSystem.Common
             if (SkitSceneData.TryGetValue(nameof(SkitSceneGeneralSettingsData), out var generalSettingsDataList) &&
                 generalSettingsDataList.FirstOrDefault() is SkitSceneGeneralSettingsData generalSettingsData)
             {
+                foreach (var charaImageMap in generalSettingsData.CharaImageDictionary)
+                {
+                    Debug.Log(charaImageMap.Key);
+                    foreach (var VARIABLE in charaImageMap.Value)
+                    {
+                        Debug.Log($"{VARIABLE.Key} : {VARIABLE.Value}");
+                    }
+                }
+                
                 // スプライト名のフォーマットを取得
                 if (generalSettingsData.CharaImageDictionary.TryGetValue(characterName, out var emoteSpriteMap))
                 {
@@ -79,7 +86,7 @@ namespace SkitSystem.Common
                 }
                 else
                 {
-                    Debug.LogError($"キャラクター名 '{characterName}' に対応するスプライト名が見つかりません。");
+                    Debug.LogError($"キャラクター名 {characterName} に対応するemoteSpriteMapが見つかりません。");
                 }
             }
             else

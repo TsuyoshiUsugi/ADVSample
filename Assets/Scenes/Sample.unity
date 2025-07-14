@@ -924,11 +924,11 @@ PrefabInstance:
     - target: {fileID: 1160607513713909334, guid: 88f470558d19041428a9c61838d02a96, type: 3}
       propertyPath: '_skitDataLoaders.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: eb6306f993ebb614c9dcd37f7ecc31b7, type: 2}
+      objectReference: {fileID: 11400000, guid: d69f215ae7fd9b543ac1fa6236268374, type: 2}
     - target: {fileID: 1160607513713909334, guid: 88f470558d19041428a9c61838d02a96, type: 3}
       propertyPath: '_skitDataLoaders.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: d69f215ae7fd9b543ac1fa6236268374, type: 2}
+      objectReference: {fileID: 11400000, guid: eb6306f993ebb614c9dcd37f7ecc31b7, type: 2}
     - target: {fileID: 4516558314724446861, guid: 88f470558d19041428a9c61838d02a96, type: 3}
       propertyPath: m_Name
       value: SkitSceneStarter

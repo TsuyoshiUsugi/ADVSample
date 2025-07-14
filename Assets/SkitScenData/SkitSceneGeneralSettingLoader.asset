@@ -21,4 +21,5 @@ MonoBehaviour:
     RefIds:
     - rid: 5083283376491462770
       type: {class: ConvertToSkitSceneGeneralData, ns: SkitSystem.Model.RawSkitDataConverter, asm: Assembly-CSharp}
-      data: 
+      data:
+        _sceneDataContainer: {fileID: 11400000, guid: 0b0e7efc4eb2eb74cb5ffa7b70d3e025, type: 2}
