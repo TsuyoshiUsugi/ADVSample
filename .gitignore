@@ -100,3 +100,4 @@ InitTestScene*.unity*
 .idea/
 CLAUDE.md
 Assets/SkitSceneAssets/
+.claude/settings.local.json

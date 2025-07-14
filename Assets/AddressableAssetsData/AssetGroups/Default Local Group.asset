@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_GUID: cdf28b1ff28bcb8499fee214b808f397
+  m_SerializeEntries:
+  - m_GUID: 0b81eac332205bb46977cc17204138c0
+    m_Address: Assets/SkitSceneAssets
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SkitScene
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 36189669ed9570140b842084e30518aa, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 9ccd41ab0c1bdf94c90d3267c8e87868, type: 2}
+    - {fileID: 11400000, guid: 92aa0cce0a6a8444db848df816a18707, type: 2}
