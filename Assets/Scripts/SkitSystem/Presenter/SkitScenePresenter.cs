@@ -16,6 +16,8 @@ namespace SkitSystem
         [Header("Skitシーンのビュー")]
         [SerializeField] private ConversationDialogView _conversationDialogView;
         [SerializeField] private ConversationCharaImageAndBackgroundView _conversationCharaImageAndBackgroundView;
+        [SerializeField] private SkitSceneFader _skitSceneFader;
+        
         private SkitSceneInput _skitSceneInput;
 
         private void Start()
@@ -50,30 +52,44 @@ namespace SkitSystem
         /// </summary>
         private async UniTask InitializeAsync()
         {
+            _conversationCharaImageAndBackgroundView.ResetImages();
+            _skitSceneFader.ForceShowFade();
             // modelの初期化
             await _skitSceneStarter.InitializeSkitSceneData();
             _skitSceneManager.Initialize();
 
             //会話シーンの画面表示処理の関連づけ
             foreach (var handler in _skitSceneManager.SkitContextHandlers)
+            {
                 if (handler is ConversationExecutor conversationExecutor)
+                {
                     conversationExecutor.CurrentConversationData.Subscribe(async conversationData =>
                     {
                         if (conversationData == null) return;
                         _conversationCharaImageAndBackgroundView.ResetImages();
 
-                        _conversationCharaImageAndBackgroundView.ShowBackground(_skitSceneDataContainer.GetSpriteByFileName(conversationData.BackgroundImageName));
+                        _conversationCharaImageAndBackgroundView.ShowBackground(
+                            _skitSceneDataContainer.GetSpriteByFileName(conversationData.BackgroundImageName));
                         foreach (var showCharaData in conversationData.ShowCharaDataList)
                         {
                             _conversationCharaImageAndBackgroundView.ShowCharacter(
-                                _skitSceneDataContainer.GetCharaSpriteByEmotion(showCharaData.CharaName, showCharaData.CharaEmote),
+                                _skitSceneDataContainer.GetCharaSpriteByEmotion(showCharaData.CharaName,
+                                    showCharaData.CharaEmote),
                                 showCharaData.StandPos);
                         }
-                        
+
+                        if (_skitSceneFader.IsFadeImageActive)
+                        {
+                            await _skitSceneFader.FadeInAsync(_skitSceneManager.CurrentCancellationToken.Token);
+                        }
                         //文字送り
-                        await _conversationDialogView.ShowConversation(conversationData.TalkerName, conversationData.Dialogue,
+                        await _conversationDialogView.ShowConversation(conversationData.TalkerName,
+                            conversationData.Dialogue,
                             _skitSceneManager.CurrentCancellationToken.Token);
                     });
+                }
+            }
+            
 
             //マウスクリック等されたとき
             _skitSceneInput.SkitSceneInputMap.Tap.performed += _ =>
@@ -84,10 +100,7 @@ namespace SkitSystem
                     foreach (var handler in _skitSceneManager.SkitContextHandlers)
                         if (handler is ConversationExecutor conversationExecutor)
                             conversationExecutor.AwaitForInput.TrySetResult("Input received");
-
-                Debug.Log("タップ入力");
             };
-
             // スキットシーンの実行を開始
             await _skitSceneManager.DoSkitSequence();
         }

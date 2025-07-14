@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,11 @@ namespace SkitSystem.View
         [SerializeField] private Image _characterImageCenter;
         [SerializeField] private Image _characterImageRight;
 
+        private void Start()
+        {
+            ResetImages();
+        }
+
         public void ShowBackground(Sprite backgroundSprite)
         {
             if (_backgroundImage != null)
@@ -32,9 +38,13 @@ namespace SkitSystem.View
         public void ResetImages()
         {
             _backgroundImage.sprite = null;
+            _backgroundImage.enabled = false;
             _characterImageLeft.sprite = null;
+            _characterImageLeft.enabled = false;
             _characterImageCenter.sprite = null;
+            _characterImageCenter.enabled = false;
             _characterImageRight.sprite = null;
+            _characterImageRight.enabled = false;
         }
 
         public void ShowCharacter(Sprite characterSprite, string position)

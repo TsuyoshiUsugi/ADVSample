@@ -110,10 +110,6 @@ namespace SkitSystem.Model
                 }
 
                 var handleSkitContextType = currentSkitContext.GetType().Name;
-                Debug.Log(handleSkitContextType);
-
-                foreach (var handler in SkitContextHandlers) Debug.Log(handler.HandleSkitContextType);
-
                 foreach (var skitContextHandler in SkitContextHandlers.Where(skitContextHandler =>
                              skitContextHandler.HandleSkitContextType == handleSkitContextType))
                 {
@@ -138,10 +134,8 @@ namespace SkitSystem.Model
         /// <summary>
         ///     一括キャンセル処理（全体停止）
         /// </summary>
-        public void CancelAllSkitOperations()
+        private void CancelAllSkitOperations()
         {
-            Debug.Log("一括キャンセル処理を開始");
-
             // 1. 全ての進行中の処理をキャンセル
             _masterCancellationTokenSource?.Cancel();
             CurrentCancellationToken?.Cancel();

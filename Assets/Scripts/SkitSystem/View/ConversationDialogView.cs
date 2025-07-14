@@ -20,6 +20,16 @@ namespace SkitSystem.View
 
         public bool IsDisplaying { get; private set; }
 
+        private void Start()
+        {
+            _internalCts = new CancellationTokenSource();
+            IsDisplaying = false;
+
+            // 初期化
+            _conversationText.text = string.Empty;
+            _displayNameText.text = string.Empty;
+        }
+
         public async UniTask ShowConversation(string talkerName, string conversation, CancellationToken token)
         {
             IsDisplaying = true;

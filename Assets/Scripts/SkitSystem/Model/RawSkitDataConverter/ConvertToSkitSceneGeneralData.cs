@@ -69,7 +69,6 @@ namespace SkitSystem.Model.RawSkitDataConverter
             }
             
             generalSettingsData.CharaNameLanguageMap = charaNameLanguageMap;
-            Debug.Log(generalSettingsData);
             return new List<SkitSceneDataAbstractBase> { generalSettingsData };
         }
     }
