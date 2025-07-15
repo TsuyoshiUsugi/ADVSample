@@ -4,6 +4,7 @@ using SkitSystem.Common;
 using SkitSystem.Model;
 using SkitSystem.View;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace SkitSystem
 {
@@ -17,6 +18,7 @@ namespace SkitSystem
         [SerializeField] private ConversationDialogView _conversationDialogView;
         [SerializeField] private ConversationCharaImageAndBackgroundView _conversationCharaImageAndBackgroundView;
         [SerializeField] private SkitSceneFader _skitSceneFader;
+        [SerializeField] private SkitSceneLogViewer _skitSceneLogViewer;
         
         private SkitSceneInput _skitSceneInput;
         private SkitSceneExiter _skitSceneExiter;
@@ -89,6 +91,13 @@ namespace SkitSystem
                             conversationData.Dialogue,
                             _skitSceneManager.CurrentCancellationToken.Token);
                     });
+                    
+                    //会話シーンのログビューアーの設定
+                    conversationExecutor.CurrentConversationData.Subscribe( conversationData =>
+                    {
+                        if (conversationData == null) return;
+                        _skitSceneLogViewer.SetLog(conversationData.TalkerName, conversationData.Dialogue);
+                    });
                 }
             }
             
@@ -96,7 +105,13 @@ namespace SkitSystem
             //マウスクリック等されたとき
             _skitSceneInput.SkitSceneInputMap.Tap.performed += _ =>
             {
+                
                 if (_skitSceneFader.IsFadeImageActive)
+                {
+                    return;
+                }
+                
+                if (EventSystem.current && EventSystem.current.currentSelectedGameObject)
                 {
                     return;
                 }
