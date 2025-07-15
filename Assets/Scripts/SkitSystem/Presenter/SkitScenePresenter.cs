@@ -19,6 +19,7 @@ namespace SkitSystem
         [SerializeField] private SkitSceneFader _skitSceneFader;
         
         private SkitSceneInput _skitSceneInput;
+        private SkitSceneFinalizer _skitSceneFinalizer;
 
         private void Start()
         {
@@ -33,7 +34,6 @@ namespace SkitSystem
 
         private void OnDisable()
         {
-            _skitSceneDataContainer?.Unload();
             _skitSceneInput?.Dispose();
             _skitSceneInput = null;
         }
@@ -55,6 +55,7 @@ namespace SkitSystem
             _conversationCharaImageAndBackgroundView.ResetImages();
             _skitSceneFader.ForceShowFade();
             // modelの初期化
+            _skitSceneFinalizer = new SkitSceneFinalizer();
             await _skitSceneStarter.InitializeSkitSceneData();
             _skitSceneManager.Initialize();
 
@@ -101,6 +102,16 @@ namespace SkitSystem
                         if (handler is ConversationExecutor conversationExecutor)
                             conversationExecutor.AwaitForInput.TrySetResult("Input received");
             };
+            
+            //終了時の処理
+            _skitSceneManager.OnSkitEnd += async () =>
+            {
+                // スキットシーンが終了したらフェードアウト
+                await _skitSceneFader.FadeOutAsync(_skitSceneManager.CurrentCancellationToken.Token);
+                // スキットシーンのビューを非表示にする
+                _skitSceneFinalizer.FinalizeSkitScene(_skitSceneDataContainer);
+            };
+            
             // スキットシーンの実行を開始
             await _skitSceneManager.DoSkitSequence();
         }

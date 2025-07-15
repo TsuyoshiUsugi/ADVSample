@@ -24,7 +24,7 @@ namespace SkitSystem.Common
         [Header("使用する言語")] public Language UseLanguage;
 
         private AsyncOperationHandle<IList<Sprite>> _handle;
-        public Dictionary<string, Sprite> SpriteDictionary { get; private set; }
+        private Dictionary<string, Sprite> SpriteDictionary { get; set; }
 
         /// <summary>
         ///     スキットシーンのデータを保持するコンテナ

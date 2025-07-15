@@ -94,8 +94,15 @@ namespace SkitSystem.Model
             }
         }
 
+        static bool debug = false;
         private async UniTask ExecuteSkitSequence(CancellationToken token)
         {
+            if (debug)
+            {
+                Debug.Log("スキットシーケンスを開始します");
+            }
+            debug = true;
+            
             while (_skitContextQueue.Count > 0)
             {
                 token.ThrowIfCancellationRequested();
