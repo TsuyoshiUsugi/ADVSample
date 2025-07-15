@@ -18,25 +18,18 @@ namespace SkitSystem.Model
         [SerializeField] private SkitSceneDataContainer _skitSceneDataContainer;
 
         private readonly Queue<SkitSceneDataAbstractBase> _skitContextQueue = new();
-        private CompositeDisposable _cancellationDisposables = new();
-
-        private CancellationTokenSource _masterCancellationTokenSource;
-
         
         public List<SkitSceneExecutorBase> SkitContextHandlers { get; } = new();
         public CancellationTokenSource CurrentCancellationToken { get; private set; }
 
         private void Start()
         {
-            _masterCancellationTokenSource = new CancellationTokenSource();
             CurrentCancellationToken = new CancellationTokenSource();
         }
 
         private void OnDestroy()
         {
-            CancelAllSkitOperations();
-            _masterCancellationTokenSource?.Dispose();
-            CurrentCancellationToken?.Dispose();
+            CancelSkitSequence();
         }
 
         public event Func<UniTask> OnSkitEnd;
@@ -80,13 +73,7 @@ namespace SkitSystem.Model
 
             try
             {
-                // マスターキャンセルトークンを使用
-                var linkedToken = CancellationTokenSource.CreateLinkedTokenSource(
-                    _masterCancellationTokenSource.Token,
-                    CurrentCancellationToken.Token
-                );
-
-                await ExecuteSkitSequence(linkedToken.Token);
+                await ExecuteSkitSequence(CurrentCancellationToken.Token);
             }
             catch (OperationCanceledException)
             {
@@ -135,33 +122,16 @@ namespace SkitSystem.Model
                 }
             }
 
-            if (OnSkitEnd != null) await OnSkitEnd.Invoke();
-        }
-
-        /// <summary>
-        ///     一括キャンセル処理（全体停止）
-        /// </summary>
-        private void CancelAllSkitOperations()
-        {
-            // 1. 全ての進行中の処理をキャンセル
-            _masterCancellationTokenSource?.Cancel();
-            CurrentCancellationToken?.Cancel();
-
-            // 2. 全ての購読を解除
-            _cancellationDisposables?.Dispose();
-            SkitContextHandlers?.ForEach(handler => handler.Dispose());
-            SkitContextHandlers?.Clear();
-
-            // 3. 新しいトークンソースを作成
-            _masterCancellationTokenSource = new CancellationTokenSource();
-            CurrentCancellationToken = new CancellationTokenSource();
-            _cancellationDisposables = new CompositeDisposable();
+            if (OnSkitEnd != null)
+            {
+                Debug.Log("スキットシーケンスが終了しました。OnSkitEndイベントを呼び出します。");
+                await OnSkitEnd.Invoke();
+            }
         }
 
         private void CancelSkitSequence()
         {
             CurrentCancellationToken?.Cancel();
-            SkitContextHandlers.ToList().ForEach(handler => handler.Dispose());
             CurrentCancellationToken = new CancellationTokenSource();
         }
     }

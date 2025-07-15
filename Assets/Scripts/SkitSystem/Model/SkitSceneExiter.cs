@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 namespace SkitSystem.Model
 {
-    public class SkitSceneFinalizer
+    public class SkitSceneExiter
     {
         private const string DefaultLoadNextSceneName = "SkitSceneSample";
         

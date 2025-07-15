@@ -13,15 +13,10 @@ namespace SkitSystem.Model
     ///     ロードするとLoaderのConvertedDataに変換後のデータが格納される。以降はこれにアクセスすればいい。
     ///     2．
     /// </summary>
-    public abstract class SkitSceneExecutorBase : IDisposable
+    public abstract class SkitSceneExecutorBase
     {
         public abstract string HandleSkitContextType { get; }
         public UniTaskCompletionSource<string> AwaitForInput { get; protected set; } = new();
-
-        public void Dispose()
-        {
-            // TODO マネージリソースをここで解放します
-        }
 
         public abstract UniTask HandleSkitSceneData(SkitSceneDataAbstractBase skitSceneData, CancellationToken token);
 

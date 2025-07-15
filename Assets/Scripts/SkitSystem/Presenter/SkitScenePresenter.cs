@@ -19,7 +19,7 @@ namespace SkitSystem
         [SerializeField] private SkitSceneFader _skitSceneFader;
         
         private SkitSceneInput _skitSceneInput;
-        private SkitSceneFinalizer _skitSceneFinalizer;
+        private SkitSceneExiter _skitSceneExiter;
 
         private void Start()
         {
@@ -34,6 +34,7 @@ namespace SkitSystem
 
         private void OnDisable()
         {
+            _skitSceneInput?.Disable();
             _skitSceneInput?.Dispose();
             _skitSceneInput = null;
         }
@@ -55,7 +56,7 @@ namespace SkitSystem
             _conversationCharaImageAndBackgroundView.ResetImages();
             _skitSceneFader.ForceShowFade();
             // modelの初期化
-            _skitSceneFinalizer = new SkitSceneFinalizer();
+            _skitSceneExiter = new SkitSceneExiter();
             await _skitSceneStarter.InitializeSkitSceneData();
             _skitSceneManager.Initialize();
 
@@ -95,6 +96,10 @@ namespace SkitSystem
             //マウスクリック等されたとき
             _skitSceneInput.SkitSceneInputMap.Tap.performed += _ =>
             {
+                if (_skitSceneFader.IsFadeImageActive)
+                {
+                    return;
+                }
                 if (_conversationDialogView.IsDisplaying)
                     _conversationDialogView.ForceShowText();
                 else
@@ -109,7 +114,7 @@ namespace SkitSystem
                 // スキットシーンが終了したらフェードアウト
                 await _skitSceneFader.FadeOutAsync(_skitSceneManager.CurrentCancellationToken.Token);
                 // スキットシーンのビューを非表示にする
-                _skitSceneFinalizer.FinalizeSkitScene(_skitSceneDataContainer);
+                _skitSceneExiter.FinalizeSkitScene(_skitSceneDataContainer);
             };
             
             // スキットシーンの実行を開始
