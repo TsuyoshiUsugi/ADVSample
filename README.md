@@ -15,8 +15,10 @@ A sophisticated conversation and dialogue system for Unity, designed for visual 
 ### 🎯 フラグベースの会話制御 / Flag-Based Dialogue Flow
 - 排他的フラグシステム（一度に1つのフラグのみアクティブ）
 - ゲーム状態に基づく分岐会話
+- タグ処理システムでフラグを動的変更
 - Exclusive flag system (only one flag active at a time)
 - Branching dialogue based on game state
+- Dynamic flag modification via tag processing system
 
 ### 📊 柔軟なデータ読み込み / Flexible Data Loading
 - Googleスプレッドシート（開発用）
@@ -33,8 +35,10 @@ A sophisticated conversation and dialogue system for Unity, designed for visual 
 ### 🎨 文字送り演出 / Text Animation
 - 文字ごとの段階的表示
 - タップで即座に全文表示
+- ログ機能で過去の会話を管理
 - Character-by-character text display
 - Tap to instantly show full text
+- Log system for managing conversation history
 
 ### 🎭 キャラクター・背景表示 / Character & Background Display
 - キャラクター画像の動的読み込み
@@ -59,16 +63,19 @@ A sophisticated conversation and dialogue system for Unity, designed for visual 
 - `SkitDataLoader`: ScriptableObjectベースのデータローダー
 
 #### 実行システム / Execution System
-- `SkitSceneManager`: 会話シーケンスの統括管理
+- `SkitSceneManager`: 会話シーケンスの統括管理とキューベース実行
 - `ConversationExecutor`: 会話データの実行処理
 - `SkitSceneExecutorBase`: 実行処理の基底クラス
+- `SkitSceneExiter`: シーン終了処理管理
 
 #### プレゼンテーション / Presentation
 - `SkitScenePresenter`: メインプレゼンター
 - `ConversationDialogView`: 会話UI表示
 - `ConversationCharaImageAndBackgroundView`: キャラクター・背景表示
 - `SkitSceneFader`: 画面フェード処理
-- `SkitSceneStarter`: システム初期化
+- `SkitSceneStarter`: システム初期化とデータロード
+- `SkitSceneLogViewer`: ログ表示機能
+- `LogPrefab`: ログエントリプレハブ
 
 ### データ構造 / Data Structure
 
@@ -102,10 +109,15 @@ FlagData
 ## セットアップ / Setup
 
 1. Unityプロジェクトを開く / Open Unity project
-2. 必要なパッケージをインストール / Install required packages
+2. 必要なパッケージをインストール / Install required packages:
+   - UniTask (2.5.10)
+   - R3 (1.3.0)
+   - Unity Addressables (2.5.0)
+   - Unity Input System (1.14.0)
 3. `SkitSceneStarter`プレハブをシーンに配置 / Place `SkitSceneStarter` prefab in scene
 4. 会話データCSVを準備 / Prepare conversation data CSV
-5. データローダーを設定 / Configure data loader
+5. `SkitDataLoader`でデータソースを設定 / Configure data sources with `SkitDataLoader`
+6. タグハンドラーを登録（必要に応じて） / Register tag handlers (if needed)
 
 ## 使用方法 / Usage
 
@@ -114,21 +126,56 @@ FlagData
 ```csharp
 // システム初期化
 var skitSceneStarter = FindObjectOfType<SkitSceneStarter>();
-await skitSceneStarter.StartAsync();
+await skitSceneStarter.InitializeSkitSceneData();
 
-// 会話開始
+// 会話システムの初期化
 var manager = FindObjectOfType<SkitSceneManager>();
-await manager.StartConversationAsync(conversationId);
+manager.Initialize();
+
+// 会話実行
+await manager.ExecuteAsync(cancellationToken);
 ```
 
 ### フラグ管理 / Flag Management
 
 ```csharp
-// フラグ設定
-flagData.SetFlag("flag_name", true);
+// フラグデータの取得
+var flagData = skitSceneDataContainer.GetSkitSceneData<FlagData>();
 
-// フラグに基づく会話選択
-var conversation = manager.GetConversationByFlag("flag_name");
+// 排他的フラグ設定（他のフラグは自動で無効化）
+flagData.SetActiveFlag("flag_name");
+
+// 現在のアクティブフラグを取得
+var activeFlag = flagData.GetActiveFlag();
+```
+
+### タグ処理システム / Tag Processing System
+
+```csharp
+// タグハンドラーの登録
+var setTagHandler = new SetFlagTagHandler();
+tagProcessor.RegisterHandler(setTagHandler);
+
+// タグの処理
+tagProcessor.ProcessTag("flag", "flag_value");
+```
+
+### シーン終了処理 / Scene Exit Processing
+
+```csharp
+// シーン終了処理
+var skitSceneExiter = new SkitSceneExiter();
+skitSceneExiter.FinalizeSkitScene(skitSceneDataContainer);
+```
+
+### ログ機能 / Log System
+
+```csharp
+// ログビューアーの取得
+var logViewer = FindObjectOfType<SkitSceneLogViewer>();
+
+// ログ表示の切り替え
+logViewer.ToggleLogDisplay();
 ```
 
 ## エディター拡張 / Editor Extensions
@@ -149,9 +196,11 @@ Assets/
 │       ├── Common/               # 共通コンポーネント
 │       ├── Model/                # データモデル
 │       │   ├── RawSkitDataConverter/ # データ変換処理
-│       │   └── SkitSceneData/    # 会話データ構造
+│       │   ├── SkitDataTagHandler/   # タグ処理システム
+│       │   ├── SkitSceneData/        # 会話データ構造
+│       │   └── SkitSceneExecutor/    # 実行システム
 │       ├── Presenter/            # プレゼンター
-│       └── View/                 # UI表示・フェード処理
+│       └── View/                 # UI表示・フェード処理・ログ
 ├── Prefab/                       # プレハブ
 ├── Scenes/                       # サンプルシーン
 └── SkitScenData/                 # 会話データ
@@ -160,17 +209,19 @@ Assets/
 ## 開発メモ / Development Notes
 
 ### 最近の更新 / Recent Updates
-- 画面遷移時のFade処理を実装
-- キャラクター画像の動的読み込み機能を追加
-- 背景画像の自動切り替え機能を実装
-- 画像アドレス付与機能を追加
-- 会話再生機能の実装
-- タップ進行処理の改善
+- タグ処理システムの追加（フラグ操作等）
+- シーン終了処理クラス（SkitSceneExiter）の実装
+- ログ表示機能の実装
+- キューベースの実行システムで順序制御を改善
+- キャラクター画像の動的読み込み機能
+- 背景画像の自動切り替え機能
+- 画面遷移時のFade処理
 
 ### 今後の課題 / Future Tasks
-- 終了時のFade処理の実装
-- ログ機能の追加
+- タグ処理システムの機能拡充（フラグ以外のタグタイプ）
+- ログ表示のUI改善と操作性向上
 - オート再生機能の実装
-- パフォーマンス最適化
+- セーブ/ロード機能の追加
+- パフォーマンス最適化とメモリ管理改善
 - エラーハンドリングの強化
 
