@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using R3;
 using SkitSystem.Common;
 using SkitSystem.Model.SkitSceneData;
+using SkitSystem.Model.SkitSceneExecutor;
 using UnityEngine;
 
 namespace SkitSystem.Model
@@ -81,15 +81,8 @@ namespace SkitSystem.Model
             }
         }
 
-        static bool debug = false;
         private async UniTask ExecuteSkitSequence(CancellationToken token)
         {
-            if (debug)
-            {
-                Debug.Log("スキットシーケンスを開始します");
-            }
-            debug = true;
-            
             while (_skitContextQueue.Count > 0)
             {
                 token.ThrowIfCancellationRequested();

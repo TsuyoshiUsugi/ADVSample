@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using R3;
 using SkitSystem.Common;
 using SkitSystem.Model;
+using SkitSystem.Model.SkitSceneExecutor;
 using SkitSystem.View;
 using UnityEngine;
 using UnityEngine.EventSystems;

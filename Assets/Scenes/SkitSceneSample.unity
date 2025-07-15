@@ -213,7 +213,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &69125753
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1621,7 +1621,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _logButton: {fileID: 656073096}
   _logPrefab: {fileID: 1050063886}
-  _logContainer: {fileID: 2094369891}
+  _logViewer: {fileID: 2094369891}
+  _messageContainer: {fileID: 2065380025}
 --- !u!1001 &1199382437
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1811,7 +1812,7 @@ MonoBehaviour:
   _conversationDialogView: {fileID: 943057999}
   _conversationCharaImageAndBackgroundView: {fileID: 474088992}
   _skitSceneFader: {fileID: 69125756}
-  _skitSceneLogViewer: {fileID: 0}
+  _skitSceneLogViewer: {fileID: 1192886653}
 --- !u!4 &1371460989
 Transform:
   m_ObjectHideFlags: 0
