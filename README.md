@@ -12,6 +12,14 @@ For detailed setup instructions, please see:
 
 **[📋 セットアップガイド / Setup Guide](SETUP.md)**
 
+## 使用方法 / Usage
+
+詳細な使用方法とAPIリファレンスについては以下をご覧ください：
+
+For detailed usage instructions and API reference, please see:
+
+**[📚 使用方法ガイド / Usage Guide](USAGE.md)**
+
 ## 主な機能 / Key Features
 
 ### 🌐 多言語対応 / Multi-Language Support
@@ -115,14 +123,6 @@ FlagData
 - **Unity Input System**: 入力処理 / Input handling
 - **NuGet for Unity**: .NETパッケージ統合 / .NET package integration
 
-
-## 使用方法 / Usage
-
-詳細な使用方法とAPIリファレンスについては以下をご覧ください：
-
-For detailed usage instructions and API reference, please see:
-
-**[📚 使用方法ガイド / Usage Guide](USAGE.md)**
 
 ## エディター拡張 / Editor Extensions
 
