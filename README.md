@@ -4,12 +4,26 @@ Unity向けの高機能な会話・対話システムです。ビジュアルノ
 
 A sophisticated conversation and dialogue system for Unity, designed for visual novels and story-driven games.
 
+## セットアップ / Setup
+
+1. Unityプロジェクトを開く / Open Unity project
+2. 必要なパッケージをインストール / Install required packages:
+   - UniTask (2.5.10)
+   - R3 (1.3.0)
+   - Unity Addressables (2.5.0)
+   - Unity Input System (1.14.0)
+   - NuGet for Unity (4.4.0)
+3. `SkitSceneStarter`プレハブをシーンに配置 / Place `SkitSceneStarter` prefab in scene
+4. 会話データCSVを準備 / Prepare conversation data CSV
+5. `SkitDataLoader`でデータソースを設定 / Configure data sources with `SkitDataLoader`
+6. タグハンドラーを登録（必要に応じて） / Register tag handlers (if needed)
+
 ## 主な機能 / Key Features
 
 ### 🌐 多言語対応 / Multi-Language Support
-- 日本語、英語、中国語、韓国語に対応
+- 日本語、英語に対応
 - 言語別の会話データ管理
-- Support for Japanese, English, Chinese, and Korean
+- Support for Japanese and English
 - Language-specific dialogue data management
 
 ### 🎯 フラグベースの会話制御 / Flag-Based Dialogue Flow
@@ -105,19 +119,8 @@ FlagData
 - **R3**: リアクティブプログラミング / Reactive programming
 - **Unity Addressables**: アセット管理 / Asset management
 - **Unity Input System**: 入力処理 / Input handling
+- **NuGet for Unity**: .NETパッケージ統合 / .NET package integration
 
-## セットアップ / Setup
-
-1. Unityプロジェクトを開く / Open Unity project
-2. 必要なパッケージをインストール / Install required packages:
-   - UniTask (2.5.10)
-   - R3 (1.3.0)
-   - Unity Addressables (2.5.0)
-   - Unity Input System (1.14.0)
-3. `SkitSceneStarter`プレハブをシーンに配置 / Place `SkitSceneStarter` prefab in scene
-4. 会話データCSVを準備 / Prepare conversation data CSV
-5. `SkitDataLoader`でデータソースを設定 / Configure data sources with `SkitDataLoader`
-6. タグハンドラーを登録（必要に応じて） / Register tag handlers (if needed)
 
 ## 使用方法 / Usage
 
