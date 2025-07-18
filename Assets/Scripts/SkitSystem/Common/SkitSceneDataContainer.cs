@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace SkitSystem.Common
         }
 
         [Header("スキットシーンのデータが初期化されているかどうか")] public bool IsInitialized;
+        [Header("スキットシーンのアセットのラベル")] public string SkitSceneAssetLabel = "SkitScene";
         [Header("使用する言語")] public Language UseLanguage;
 
         private AsyncOperationHandle<IList<Sprite>> _handle;
@@ -45,11 +47,28 @@ namespace SkitSystem.Common
         /// </summary>
         public async UniTask LoadSkitSceneAssetsAsync()
         {
-            _handle = Addressables.LoadAssetsAsync<Sprite>("SkitScene");
-            var sprites = await _handle.Task;
+            try
+            {
+                _handle = Addressables.LoadAssetsAsync<Sprite>(SkitSceneAssetLabel);
 
-            // 名前でアクセスしやすいように Dictionary に変換
-            SpriteDictionary = sprites.ToDictionary(sprite => sprite.name, sprite => sprite);
+                if (!_handle.IsValid())
+                {
+                    Debug.LogError("SkitScene のスプライトアセットのロードに失敗しました。Handleが無効です。");
+                    return;
+                }
+
+                var sprites = await _handle.Task; // ここで例外になる可能性あり
+
+                SpriteDictionary = sprites.ToDictionary(sprite => sprite.name, sprite => sprite);
+            }
+            catch (InvalidKeyException e)
+            {
+                Debug.LogError($"アドレスラブルキーが無効です: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"スプライトロード時に例外が発生: {e}");
+            }
         }
 
         /// <summary>
