@@ -59,40 +59,10 @@ https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity
 ```
 
 ## ステップ3: SkitSystemの導入 / Step 3: Import SkitSystem
+SkitSceneSampleを開く  
+Open SkitSceneSample
 
-1. このリポジトリをクローンまたはダウンロード
-2. `Assets/Scripts/SkitSystem` フォルダをUnityプロジェクトにコピー
-3. `Assets/Prefab` フォルダもコピー
-
-1. Clone or download this repository
-2. Copy `Assets/Scripts/SkitSystem` folder to your Unity project
-3. Also copy `Assets/Prefab` folder
-
-## ステップ4: プレハブの配置 / Step 4: Place Prefabs
-
-### SkitSceneStarterの配置 / Place SkitSceneStarter
-
-1. `Assets/Prefab/SkitSceneStarter.prefab` をシーンにドラッグ
-2. インスペクターで以下を設定：
-   - **Data Source Type**: CSV または Addressable を選択
-   - **CSV Path**: CSVファイルのパス（CSV選択時）
-   - **Addressable Key**: アドレサブルキー（Addressable選択時）
-
-1. Drag `Assets/Prefab/SkitSceneStarter.prefab` to your scene
-2. Configure in Inspector:
-   - **Data Source Type**: Select CSV or Addressable
-   - **CSV Path**: Path to CSV file (when CSV selected)
-   - **Addressable Key**: Addressable key (when Addressable selected)
-
-### 会話UIの配置 / Place Conversation UI
-
-1. `Assets/Prefab/ConversationCanvas.prefab` をシーンに配置
-2. 必要に応じてUIレイアウトを調整
-
-1. Place `Assets/Prefab/ConversationCanvas.prefab` in scene
-2. Adjust UI layout as needed
-
-## ステップ5: 会話データの準備 / Step 5: Prepare Conversation Data
+## ステップ4: 会話データの準備 / Step 4: Prepare Conversation Data
 
 ### CSV形式のデータ / CSV Format Data
 
@@ -108,6 +78,7 @@ id,speaker,text_ja,text_en,background,chara_name,chara_emotion,chara_position,fl
 
 #### 必須列 / Required Columns
 - **id**: 会話ID / Conversation ID
+  **flag**: フラグ名 / Flag name
 - **speaker**: 話者名 / Speaker name
 - **text_ja**: 日本語テキスト / Japanese text
 - **text_en**: 英語テキスト / English text
@@ -115,7 +86,10 @@ id,speaker,text_ja,text_en,background,chara_name,chara_emotion,chara_position,fl
 - **chara_name**: キャラクター名 / Character name
 - **chara_emotion**: 感情 / Emotion
 - **chara_position**: 位置 / Position
-- **flag**: フラグ名 / Flag name
+
+参考
+<img width="3449" height="845" alt="d69e0032bff8198f7be5f80803b6fc72" src="https://github.com/user-attachments/assets/5825c77b-28c4-4197-afcd-e5e86ed21a0f" />
+
 
 ### Addressable Assets（推奨）/ Addressable Assets (Recommended)
 
@@ -128,18 +102,6 @@ id,speaker,text_ja,text_en,background,chara_name,chara_emotion,chara_position,fl
 2. Create conversation data assets
 3. Add to Addressable groups
 4. Set appropriate keys
-
-## ステップ6: 基本設定 / Step 6: Basic Configuration
-
-### Input Systemの設定 / Input System Configuration
-
-1. Edit > Project Settings > XR Plug-in Management > Input System Package
-2. 「Both」または「Input System Package (New)」を選択
-3. Unityを再起動
-
-1. Edit > Project Settings > XR Plug-in Management > Input System Package
-2. Select "Both" or "Input System Package (New)"
-3. Restart Unity
 
 ### タグハンドラーの登録（オプション）/ Register Tag Handlers (Optional)
 
@@ -163,47 +125,6 @@ tagProcessor.RegisterHandler(setFlagHandler);
 1. Press Play button to run the scene
 2. Confirm conversations display correctly
 3. Confirm tapping advances to next conversation
-
-## トラブルシューティング / Troubleshooting
-
-### よくある問題 / Common Issues
-
-#### パッケージのインポートエラー / Package Import Error
-- Unity バージョンが要件を満たしているか確認
-- Git URLが正しいか確認
-- Check Unity version meets requirements
-- Verify Git URLs are correct
-
-#### 会話データが読み込まれない / Conversation Data Not Loading
-- CSVファイルのパスが正しいか確認
-- CSVファイルの形式が正しいか確認
-- Addressableのキーが正しく設定されているか確認
-- Verify CSV file path is correct
-- Check CSV file format is correct
-- Confirm Addressable keys are properly set
-
-#### UIが表示されない / UI Not Displaying
-- ConversationCanvasプレハブが配置されているか確認
-- Canvasの表示順序を確認
-- Check ConversationCanvas prefab is placed
-- Verify Canvas sorting order
-
-#### 入力が反応しない / Input Not Responding
-- Input Systemの設定を確認
-- EventSystemがシーンに存在するか確認
-- Check Input System configuration
-- Verify EventSystem exists in scene
-
-### サポート / Support
-
-問題が解決しない場合は、以下の情報を含めてIssueを作成してください：
-
-If issues persist, create an Issue with the following information:
-
-- Unity バージョン / Unity version
-- エラーメッセージ / Error messages
-- 実行環境 / Runtime environment
-- 再現手順 / Steps to reproduce
 
 ---
 
