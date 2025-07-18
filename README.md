@@ -23,10 +23,10 @@ For detailed usage instructions and API reference, please see:
 ## 主な機能 / Key Features
 
 ### 🌐 多言語対応 / Multi-Language Support
-- 日本語、英語に対応
-- 言語別の会話データ管理
-- Support for Japanese and English
-- Language-specific dialogue data management
+- 日本語、英語に対応（実装済み）
+- CSVデータで言語列を分けて管理
+- Support for Japanese and English (implemented)
+- Language columns separated in CSV data
 
 ### 🎯 フラグベースの会話制御 / Flag-Based Dialogue Flow
 - 排他的フラグシステム（一度に1つのフラグのみアクティブ）
@@ -44,16 +44,22 @@ For detailed usage instructions and API reference, please see:
 
 ### ⚡ 非同期処理 / Asynchronous Operations
 - UniTaskを使用したスムーズな処理
-- キャンセル可能な操作
+- CancellationTokenで適切なキャンセル処理
+- `UniTaskCompletionSource`で入力待機管理
+- Addressableアセットの非同期ロード
 - Smooth operations using UniTask
-- Cancellable operations
+- Proper cancellation handling with CancellationToken
+- Input waiting management with UniTaskCompletionSource
+- Asynchronous Addressable asset loading
 
 ### 🎨 文字送り演出 / Text Animation
-- 文字ごとの段階的表示
-- タップで即座に全文表示
+- 文字ごとの段階的表示（DOTween使用）
+- タップで即座に全文表示と次の会話へ進行
+- タグを視覚的に削除して表示
 - ログ機能で過去の会話を管理
-- Character-by-character text display
-- Tap to instantly show full text
+- Character-by-character text display using DOTween
+- Tap to show full text instantly and advance to next
+- Visual tag removal from displayed text
 - Log system for managing conversation history
 
 ### 🎭 キャラクター・背景表示 / Character & Background Display
@@ -74,22 +80,27 @@ For detailed usage instructions and API reference, please see:
 ### 主要コンポーネント / Core Components
 
 #### データ管理 / Data Management
-- `SkitSceneDataContainer`: 会話データの中央管理
+- `SkitSceneDataContainer`: 会話データの中央管理（シングルトンパターン）
 - `CsvLoader`: CSV形式のデータ読み込み
-- `SkitDataLoader`: ScriptableObjectベースのデータローダー
+- `ConvertToConversationData`: CSVデータをConversationDataに変換
+- `FlagTagHandler`: フラグタグの処理（`<flag=value>`形式）
 
 #### 実行システム / Execution System
 - `SkitSceneManager`: 会話シーケンスの統括管理とキューベース実行
+  - `DoSkitSequence()`: 主要な実行メソッド
+  - `CancelSkitSequence()`: キャンセル処理
 - `ConversationExecutor`: 会話データの実行処理
 - `SkitSceneExecutorBase`: 実行処理の基底クラス
 - `SkitSceneExiter`: シーン終了処理管理
 
 #### プレゼンテーション / Presentation
 - `SkitScenePresenter`: メインプレゼンター
-- `ConversationDialogView`: 会話UI表示
+- `SkitSceneStarter`: システム初期化とデータロード
+
+#### ビュー / View
+- `ConversationDialogView`: 会話UI表示とタグ処理
 - `ConversationCharaImageAndBackgroundView`: キャラクター・背景表示
 - `SkitSceneFader`: 画面フェード処理
-- `SkitSceneStarter`: システム初期化とデータロード
 - `SkitSceneLogViewer`: ログ表示機能
 - `LogPrefab`: ログエントリプレハブ
 
@@ -98,21 +109,20 @@ For detailed usage instructions and API reference, please see:
 #### 会話データ / Conversation Data
 ```csharp
 ConversationData
-├── Background Image
-├── Speaker Name
-├── Dialogue Text
-└── Character Display Data
-    ├── Name
-    ├── Emotion
-    └── Position
+├── BackgroundImageName    // 背景画像名
+├── TalkerName             // 話者名
+├── Dialogue               // 会話テキスト
+└── ShowCharaDataList      // キャラクター表示データ配列
+    ├── CharaName          // キャラクター名
+    ├── CharaEmote         // 感情表現
+    └── StandPos           // 立ち位置（左/真ん中/右）
 ```
 
 #### フラグデータ / Flag Data
 ```csharp
 FlagData
-├── Flag ID
-├── Flag Name
-└── Active State (exclusive)
+├── CurrentFlag            // 現在のアクティブフラグ
+└── SetExclusiveFlag()     // 排他的フラグ設定メソッド
 ```
 
 ## 必要な依存関係 / Dependencies
