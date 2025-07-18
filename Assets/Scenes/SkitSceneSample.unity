@@ -1632,12 +1632,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1160607513713909334, guid: 88f470558d19041428a9c61838d02a96, type: 3}
+      propertyPath: _loadRemoteData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1160607513713909334, guid: 88f470558d19041428a9c61838d02a96, type: 3}
       propertyPath: _skitSceneDataContainer
       value: 
       objectReference: {fileID: 11400000, guid: 0b0e7efc4eb2eb74cb5ffa7b70d3e025, type: 2}
     - target: {fileID: 1160607513713909334, guid: 88f470558d19041428a9c61838d02a96, type: 3}
       propertyPath: _skitDataLoaders.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1160607513713909334, guid: 88f470558d19041428a9c61838d02a96, type: 3}
       propertyPath: '_skitDataLoaders.Array.data[0]'
@@ -1645,6 +1649,14 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: d69f215ae7fd9b543ac1fa6236268374, type: 2}
     - target: {fileID: 1160607513713909334, guid: 88f470558d19041428a9c61838d02a96, type: 3}
       propertyPath: '_skitDataLoaders.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: eb6306f993ebb614c9dcd37f7ecc31b7, type: 2}
+    - target: {fileID: 1160607513713909334, guid: 88f470558d19041428a9c61838d02a96, type: 3}
+      propertyPath: '_skitDataLoaders.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 190f5750985d79942b58c4de6ba64e0b, type: 2}
+    - target: {fileID: 1160607513713909334, guid: 88f470558d19041428a9c61838d02a96, type: 3}
+      propertyPath: '_skitDataLoaders.Array.data[3]'
       value: 
       objectReference: {fileID: 11400000, guid: eb6306f993ebb614c9dcd37f7ecc31b7, type: 2}
     - target: {fileID: 4516558314724446861, guid: 88f470558d19041428a9c61838d02a96, type: 3}
@@ -1808,7 +1820,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _skitSceneStarter: {fileID: 592133138}
   _skitSceneManager: {fileID: 88866178}
-  _skitSceneDataContainer: {fileID: 11400000, guid: 0b0e7efc4eb2eb74cb5ffa7b70d3e025, type: 2}
   _conversationDialogView: {fileID: 943057999}
   _conversationCharaImageAndBackgroundView: {fileID: 474088992}
   _skitSceneFader: {fileID: 69125756}

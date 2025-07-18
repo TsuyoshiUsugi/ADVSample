@@ -10,8 +10,6 @@ namespace SkitSystem.Model.RawSkitDataConverter
     [Serializable]
     public class ConvertToConversationData : IRawSkitDataConverter
     {
-        [SerializeField] private SkitSceneDataContainer _sceneDataContainer;
-
         public override string ConvertDataType => nameof(ConversationGroupData);
 
         public override List<SkitSceneDataAbstractBase> Convert(List<string[]> rawData)
@@ -20,7 +18,7 @@ namespace SkitSystem.Model.RawSkitDataConverter
             ConversationGroupData currentGroup = null;
 
             var charaNameMap = new Dictionary<string, Dictionary<string, string>>();
-            if (_sceneDataContainer.SkitSceneData.TryGetValue(nameof(SkitSceneGeneralSettingsData),
+            if (SkitSceneDataContainer.Instance.SkitSceneData.TryGetValue(nameof(SkitSceneGeneralSettingsData),
                     out var generalSettingsDataList))
             {
                 charaNameMap = generalSettingsDataList.OfType<SkitSceneGeneralSettingsData>().FirstOrDefault()
@@ -50,13 +48,13 @@ namespace SkitSystem.Model.RawSkitDataConverter
                         showCharaDataList.Add(new ShowCharaData(charaName, charaEmote, standPos));
                     }
 
-                var dialogue = _sceneDataContainer.UseLanguage == SkitSceneDataContainer.Language.Japanese
+                var dialogue = SkitSceneDataContainer.Instance.UseLanguage == SkitSceneDataContainer.Language.Japanese
                     ? dialogueJp
                     : dialogueEn;
 
                 if (charaNameMap != null && !string.IsNullOrEmpty(talkerName))
                 {
-                    talkerName = _sceneDataContainer.UseLanguage == SkitSceneDataContainer.Language.Japanese
+                    talkerName = SkitSceneDataContainer.Instance.UseLanguage == SkitSceneDataContainer.Language.Japanese
                         ? talkerName
                         : charaNameMap[talkerName].GetValueOrDefault(nameof(SkitSceneDataContainer.Language.English), talkerName);
                 }

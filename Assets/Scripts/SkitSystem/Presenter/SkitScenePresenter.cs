@@ -14,7 +14,6 @@ namespace SkitSystem
         [Header("Skitシーンのモデル")]
         [SerializeField] private SkitSceneStarter _skitSceneStarter;
         [SerializeField] private SkitSceneManager _skitSceneManager;
-        [SerializeField] private SkitSceneDataContainer _skitSceneDataContainer;
         [Header("Skitシーンのビュー")]
         [SerializeField] private ConversationDialogView _conversationDialogView;
         [SerializeField] private ConversationCharaImageAndBackgroundView _conversationCharaImageAndBackgroundView;
@@ -74,11 +73,11 @@ namespace SkitSystem
                         _conversationCharaImageAndBackgroundView.ResetImages();
 
                         _conversationCharaImageAndBackgroundView.ShowBackground(
-                            _skitSceneDataContainer.GetSpriteByFileName(conversationData.BackgroundImageName));
+                            SkitSceneDataContainer.Instance.GetSpriteByFileName(conversationData.BackgroundImageName));
                         foreach (var showCharaData in conversationData.ShowCharaDataList)
                         {
                             _conversationCharaImageAndBackgroundView.ShowCharacter(
-                                _skitSceneDataContainer.GetCharaSpriteByEmotion(showCharaData.CharaName,
+                                SkitSceneDataContainer.Instance.GetCharaSpriteByEmotion(showCharaData.CharaName,
                                     showCharaData.CharaEmote),
                                 showCharaData.StandPos);
                         }
@@ -130,7 +129,7 @@ namespace SkitSystem
                 // スキットシーンが終了したらフェードアウト
                 await _skitSceneFader.FadeOutAsync(_skitSceneManager.CurrentCancellationToken.Token);
                 // スキットシーンのビューを非表示にする
-                _skitSceneExiter.FinalizeSkitScene(_skitSceneDataContainer);
+                _skitSceneExiter.FinalizeSkitScene(SkitSceneDataContainer.Instance);
             };
             
             // スキットシーンの実行を開始

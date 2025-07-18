@@ -26,8 +26,7 @@ namespace SkitSystem.Model.SkitSceneData
         ///     単一のフラグのみをたてる。一つがOnになると他は全てOffになる。
         /// </summary>
         /// <param name="key"></param>
-        /// <param name="value"></param>
-        public void SetExclusiveFlag(string key, bool value)
+        public void SetExclusiveFlag(string key)
         {
             if (Flags.ContainsKey(key))
             {
@@ -35,7 +34,7 @@ namespace SkitSystem.Model.SkitSceneData
                 var keys = new List<string>(Flags.Keys); // 一時リストを使わないとコレクション変更時エラーになる可能性がある
                 foreach (var k in keys) Flags[k] = false;
 
-                Flags[key] = value;
+                Flags[key] = true;
             }
             else
             {

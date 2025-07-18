@@ -15,10 +15,7 @@ namespace SkitSystem.Model
     /// </summary>
     public class SkitSceneManager : MonoBehaviour
     {
-        [SerializeField] private SkitSceneDataContainer _skitSceneDataContainer;
-
         private readonly Queue<SkitSceneDataAbstractBase> _skitContextQueue = new();
-        
         public List<SkitSceneExecutorBase> SkitContextHandlers { get; } = new();
         public CancellationTokenSource CurrentCancellationToken { get; private set; }
 
@@ -44,7 +41,7 @@ namespace SkitSystem.Model
 
             //フラグから最初の会話データを取得
             string currentFlag = null;
-            if (_skitSceneDataContainer.SkitSceneData.TryGetValue(nameof(FlagData), out var flagDataList))
+            if (SkitSceneDataContainer.Instance.SkitSceneData.TryGetValue(nameof(FlagData), out var flagDataList))
             {
                 var flags = flagDataList
                     .OfType<FlagData>()
@@ -54,7 +51,7 @@ namespace SkitSystem.Model
                     .FirstOrDefault(flag => flag.Flags.ContainsValue(true))?.CurrentFlag;
             }
 
-            if (_skitSceneDataContainer.SkitSceneData.TryGetValue(nameof(ConversationGroupData),
+            if (SkitSceneDataContainer.Instance.SkitSceneData.TryGetValue(nameof(ConversationGroupData),
                     out var conversationGroupData))
             {
                 var conversationData = conversationGroupData.FirstOrDefault(x =>
@@ -117,7 +114,6 @@ namespace SkitSystem.Model
 
             if (OnSkitEnd != null)
             {
-                Debug.Log("スキットシーケンスが終了しました。OnSkitEndイベントを呼び出します。");
                 await OnSkitEnd.Invoke();
             }
         }

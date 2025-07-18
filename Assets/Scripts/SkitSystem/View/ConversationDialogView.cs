@@ -38,6 +38,8 @@ namespace SkitSystem.View
 
             try
             {
+                conversation = TrimTag(conversation); // タグを除去
+                
                 _displayNameText.text = talkerName ?? string.Empty;
                 _conversationText.text = string.Empty;
 
@@ -71,6 +73,12 @@ namespace SkitSystem.View
             _internalCts?.Cancel(); // 表示中のアニメーションを止める
             _conversationText.text = _currentConversation;
             IsDisplaying = false;
+        }
+        
+        private string TrimTag(string rawText)
+        {
+            // タグを除去する簡易的な実装
+            return System.Text.RegularExpressions.Regex.Replace(rawText, @"<[^>]+>", string.Empty);
         }
     }
 }

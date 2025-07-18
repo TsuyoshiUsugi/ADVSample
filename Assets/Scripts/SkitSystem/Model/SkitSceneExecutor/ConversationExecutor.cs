@@ -21,7 +21,7 @@ namespace SkitSystem.Model.SkitSceneExecutor
 
         public ConversationExecutor()
         {
-            _skitTagHandlers.Add(new SetFlagTagHandler());
+            _skitTagHandlers.Add(new FlagTagHandler());
         }
         
         public override async UniTask HandleSkitSceneData(SkitSceneDataAbstractBase skitSceneData,
@@ -35,7 +35,6 @@ namespace SkitSystem.Model.SkitSceneExecutor
                 ProcessTags(conversation.Dialogue);
                 
                 _currentConversationData.Value = conversation;
-                Debug.Log(conversation.ToString());
                 await AwaitForInput.Task;
                 AwaitForInput = new UniTaskCompletionSource<string>();
                 //Todo 次のSkitSceneDataAbstractBaseを設定する処理

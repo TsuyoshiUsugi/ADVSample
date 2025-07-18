@@ -21,10 +21,12 @@ namespace SkitSystem.Model.RawSkitDataConverter
             {
                 if (data.Length < 2) continue; // データが不完全な場合はスキップ
 
-                var flagName = data[0];
-                var flagValue = false;
-
-                flagData.Flags[flagName] = flagValue;
+                var flagName = data[1];
+                if (string.IsNullOrEmpty(flagName))
+                {
+                    continue; // フラグ名が空の場合はスキップ
+                }
+                flagData.Flags[flagName] = false;
             }
 
             return new List<SkitSceneDataAbstractBase> { flagData };

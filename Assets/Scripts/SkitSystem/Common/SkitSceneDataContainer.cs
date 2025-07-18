@@ -21,13 +21,43 @@ namespace SkitSystem.Common
             Korean
         }
 
-        [Header("スキットシーンのデータが初期化されているかどうか")] public bool IsInitialized;
-        [Header("スキットシーンのアセットのラベル")] public string SkitSceneAssetLabel = "SkitScene";
+        public static bool IsLoaded => _instance != null;
+        public static bool IsInitialized;
         [Header("使用する言語")] public Language UseLanguage;
 
         private AsyncOperationHandle<IList<Sprite>> _handle;
+        private const string SkitSceneAssetLabel = "SkitScene";
+        private static SkitSceneDataContainer _instance;
         private Dictionary<string, Sprite> SpriteDictionary { get; set; }
+        
+        public static SkitSceneDataContainer Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    Debug.LogError("SkitSceneDataContainerのインスタンスがまだ登録されていません。RegisterInstanceを呼び出してください。");
+                return _instance;
+            }
+        }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        public static async void LoadAsync()
+        {
+            if (_instance != null)
+                return;
+            var handle = Addressables.LoadAssetAsync<SkitSceneDataContainer>(SkitSceneAssetLabel);
+            await handle.Task;
+
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                _instance = handle.Result;
+            }
+            else
+            {
+                Debug.LogError($"[SkitSceneDataContainer] のロードに失敗しました: {SkitSceneAssetLabel}");
+            }
+        }
+        
         /// <summary>
         ///     スキットシーンのデータを保持するコンテナ
         /// </summary>
