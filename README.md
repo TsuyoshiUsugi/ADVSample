@@ -6,17 +6,11 @@ A sophisticated conversation and dialogue system for Unity, designed for visual 
 
 ## セットアップ / Setup
 
-1. Unityプロジェクトを開く / Open Unity project
-2. 必要なパッケージをインストール / Install required packages:
-   - UniTask (2.5.10)
-   - R3 (1.3.0)
-   - Unity Addressables (2.5.0)
-   - Unity Input System (1.14.0)
-   - NuGet for Unity (4.4.0)
-3. `SkitSceneStarter`プレハブをシーンに配置 / Place `SkitSceneStarter` prefab in scene
-4. 会話データCSVを準備 / Prepare conversation data CSV
-5. `SkitDataLoader`でデータソースを設定 / Configure data sources with `SkitDataLoader`
-6. タグハンドラーを登録（必要に応じて） / Register tag handlers (if needed)
+詳細なセットアップ手順については以下をご覧ください：
+
+For detailed setup instructions, please see:
+
+**[📋 セットアップガイド / Setup Guide](SETUP.md)**
 
 ## 主な機能 / Key Features
 
@@ -124,62 +118,11 @@ FlagData
 
 ## 使用方法 / Usage
 
-### 基本的な使用 / Basic Usage
+詳細な使用方法とAPIリファレンスについては以下をご覧ください：
 
-```csharp
-// システム初期化
-var skitSceneStarter = FindObjectOfType<SkitSceneStarter>();
-await skitSceneStarter.InitializeSkitSceneData();
+For detailed usage instructions and API reference, please see:
 
-// 会話システムの初期化
-var manager = FindObjectOfType<SkitSceneManager>();
-manager.Initialize();
-
-// 会話実行
-await manager.ExecuteAsync(cancellationToken);
-```
-
-### フラグ管理 / Flag Management
-
-```csharp
-// フラグデータの取得
-var flagData = skitSceneDataContainer.GetSkitSceneData<FlagData>();
-
-// 排他的フラグ設定（他のフラグは自動で無効化）
-flagData.SetActiveFlag("flag_name");
-
-// 現在のアクティブフラグを取得
-var activeFlag = flagData.GetActiveFlag();
-```
-
-### タグ処理システム / Tag Processing System
-
-```csharp
-// タグハンドラーの登録
-var setTagHandler = new SetFlagTagHandler();
-tagProcessor.RegisterHandler(setTagHandler);
-
-// タグの処理
-tagProcessor.ProcessTag("flag", "flag_value");
-```
-
-### シーン終了処理 / Scene Exit Processing
-
-```csharp
-// シーン終了処理
-var skitSceneExiter = new SkitSceneExiter();
-skitSceneExiter.FinalizeSkitScene(skitSceneDataContainer);
-```
-
-### ログ機能 / Log System
-
-```csharp
-// ログビューアーの取得
-var logViewer = FindObjectOfType<SkitSceneLogViewer>();
-
-// ログ表示の切り替え
-logViewer.ToggleLogDisplay();
-```
+**[📚 使用方法ガイド / Usage Guide](USAGE.md)**
 
 ## エディター拡張 / Editor Extensions
 
