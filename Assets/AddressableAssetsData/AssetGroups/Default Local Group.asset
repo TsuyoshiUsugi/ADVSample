@@ -15,8 +15,20 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: cdf28b1ff28bcb8499fee214b808f397
   m_SerializeEntries:
-  - m_GUID: 0b81eac332205bb46977cc17204138c0
-    m_Address: Assets/SkitSceneAssets
+  - m_GUID: 0b0e7efc4eb2eb74cb5ffa7b70d3e025
+    m_Address: Assets/SkitSceneData/SkitSceneDataContainer.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SkitScene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 74bf1fecc1dc9404abe070666aa76fbb
+    m_Address: Assets/SkitSceneAssets/BackgrounImages
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SkitScene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7aaabfd74b61d6243b89eaa95c4ccc1b
+    m_Address: Assets/SkitSceneAssets/CharaImages
     m_ReadOnly: 0
     m_SerializedLabels:
     - SkitScene
