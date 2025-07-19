@@ -40,6 +40,7 @@ ADVゲームの処理のサンプルです。ADVゲームの基本的なシス�
 SkitSystemでは以下の2つのシートを**別々に**作成・設定する必要があります：
 
 ## 1. 会話データシート（ConversationSkitDataLoader用）
+<img width="3449" height="845" alt="d69e0032bff8198f7be5f80803b6fc72" src="https://github.com/user-attachments/assets/d7dc03d0-9c9a-4669-ad77-b1c041c719be" />
 
 会話の内容とフラグ設定を管理するシートです。
 
@@ -56,6 +57,7 @@ SkitSystemでは以下の2つのシートを**別々に**作成・設定する�
 - **chara_position**: 位置 / Position
 
 ## 2. 全般設定データシート（SkitSceneGeneralSettingLoader用）
+<img width="1993" height="389" alt="3e4aeac5e8c4f06245dccc788e8e98f9" src="https://github.com/user-attachments/assets/f4f81948-7a7f-435d-8f17-4a87e2a0d821" />
 
 キャラクター画像設定や名前設定を管理するシートです。
 
@@ -90,7 +92,8 @@ SkitSystemでは以下の2つのシートを**別々に**作成・設定する�
 
 スプシのアドレスは該当のシートを開き、左上の
 
-ファイル＞共有＞Webに公開
+ファイル＞共有＞Webに公開  
+<img width="726" height="857" alt="82a333c2375858544a03e98f101d1383" src="https://github.com/user-attachments/assets/4e65951b-c8fd-4068-8c33-6eace1ea644e" />  
 
 から取得できます。
 
