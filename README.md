@@ -119,18 +119,13 @@ SkitSystemでは以下の2つのシートを作成・設定する必要があり
 # 独自のCSVデータをロードし、それに合わせた処理をする
 
 まずCSVデータを変換する処理を作成します。
-`IRawSkitDataConverter`を継承し、各カラムを読みこみ、`List<SkitSceneDataAbstractBase>`を返す処理を作成します。
+[`IRawSkitDataConverter`](Assets/Scripts/SkitSystem/Model/RawSkitDataConverter/IRawSkitDataConverter.cs)を継承し、各カラムを読みこみ、`List<SkitSceneDataAbstractBase>`を返す処理を作成します。
 
-`SkitSceneDataAbstractBase`は返すデータを定義するクラスです。
+[`SkitSceneDataAbstractBase`](Assets/Scripts/SkitSystem/Model/SkitSceneData/SkitSceneDataAbstractBase.cs)は返すデータを定義するクラスです。
 
 次に実際の会話シーン内で定義したデータを処理するクラスを作成します。
-`SkitSceneExecutorBase`
-
-を継承し、
-`HandleSkitSceneData`
-
-で処理する仕組みを定義してください。描画や入力処理が絡む場合は現在処理しているデータをリアクティブで公開し、Presenterでつなぎこむことをお勧めします。
+[`SkitSceneExecutorBase`](Assets/Scripts/SkitSystem/Model/SkitSceneExecutor/SkitSceneExecutorBase.cs)を継承し、`HandleSkitSceneData`で処理する仕組みを定義してください。描画や入力処理が絡む場合は現在処理しているデータをリアクティブで公開し、Presenterでつなぎこむことをお勧めします。
 
 また入力を待つ際は待機用の`UniTaskCompletionSource` を公開するのもおすすめです。
 
-詳しくは`ConversationExecutor` などを参考にしてください。
+詳しくは[`ConversationExecutor`](Assets/Scripts/SkitSystem/Model/SkitSceneExecutor/ConversationExecutor.cs)などを参考にしてください。
