@@ -9,6 +9,28 @@ ADVゲームの処理のサンプルです。ADVゲームの基本的なシス�
 
 https://github.com/user-attachments/assets/df958452-95bb-4166-9bfc-e790f718021a
 
+<details>
+<summary><small>お借りした素材</small></summary>
+
+<small>
+
+**会話ウィンドウ、UI**  
+サイト｜空想曲線  
+ＵＲＬ｜https://kopacurve.blog.fc2.com/
+
+**背景**  
+みんちりえ（ https://min-chi.material.jp/ ）
+
+**キャラ**  
+・わたおきば(https://wataokiba.net/)
+
+**フォント**  
+aosagi  
+https://ymnk-design.com/aosagi/
+
+</small>
+
+</details>
 
 # 実装済み機能
 
