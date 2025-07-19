@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3081c48181747104bb051403790eaf18, type: 3}
-  m_Name: SkitSceneGeneralSettingLoader
+  m_Name: ConversationSkitDataLoader
   m_EditorClassIdentifier: 
   Converter:
-    rid: 5083283376491462770
-  _remoteSpreadSheetDataKey: https://docs.google.com/spreadsheets/d/e/2PACX-1vRTilhqmIkXpT7kMrg5xXJR0qgZ4HGii7fnxp3UeRtxgXzWDS6O3UNUOX-CQk3w7zeMVAub5TEmbRzN/pub?gid=390058579&single=true&output=csv
+    rid: 5083283325274816771
+  _remoteSpreadSheetDataKey: 
   _localAddressablePath: "Assets/SkitSceneAssets/ADV\u30B2\u30FC\u30E0\u30DE\u30B9\u30BF\u30FC\u30C7\u30FC\u30BF
-    - \u4F1A\u8A71\u30B7\u30FC\u30F3\u8A2D\u5B9A.csv"
+    - \u4F1A\u8A71\u30B7\u30FC\u30F3\u30C7\u30FC\u30BF.csv"
   references:
     version: 2
     RefIds:
-    - rid: 5083283376491462770
-      type: {class: ConvertToSkitSceneGeneralData, ns: SkitSystem.Model.RawSkitDataConverter, asm: Assembly-CSharp}
+    - rid: 5083283325274816771
+      type: {class: ConvertToConversationData, ns: SkitSystem.Model.RawSkitDataConverter, asm: Assembly-CSharp}
       data: 

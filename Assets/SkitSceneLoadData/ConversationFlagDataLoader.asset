@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Converter:
     rid: 7822716679484342345
-  _remoteSpreadSheetDataKey: https://docs.google.com/spreadsheets/d/e/2PACX-1vRTilhqmIkXpT7kMrg5xXJR0qgZ4HGii7fnxp3UeRtxgXzWDS6O3UNUOX-CQk3w7zeMVAub5TEmbRzN/pub?output=csv
+  _remoteSpreadSheetDataKey: 
   _localAddressablePath: "Assets/SkitSceneAssets/ADV\u30B2\u30FC\u30E0\u30DE\u30B9\u30BF\u30FC\u30C7\u30FC\u30BF
     - \u4F1A\u8A71\u30B7\u30FC\u30F3\u30C7\u30FC\u30BF.csv"
   references:
