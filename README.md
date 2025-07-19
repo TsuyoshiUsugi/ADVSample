@@ -119,13 +119,84 @@ SkitSystemでは以下の2つのシートを作成・設定する必要があり
 # 独自のCSVデータをロードし、それに合わせた処理をする
 
 まずCSVデータを変換する処理を作成します。
-[`IRawSkitDataConverter`](Assets/Scripts/SkitSystem/Model/RawSkitDataConverter/IRawSkitDataConverter.cs)を継承し、各カラムを読みこみ、`List<SkitSceneDataAbstractBase>`を返す処理を作成します。
+`IRawSkitDataConverter`を継承し、各カラムを読みこみ、`List<SkitSceneDataAbstractBase>`を返す処理を作成します。
 
-[`SkitSceneDataAbstractBase`](Assets/Scripts/SkitSystem/Model/SkitSceneData/SkitSceneDataAbstractBase.cs)は返すデータを定義するクラスです。
+```csharp
+// IRawSkitDataConverter.cs
+namespace SkitSystem.Model.RawSkitDataConverter
+{
+    [Serializable]
+    public abstract class IRawSkitDataConverter
+    {
+        public abstract string ConvertDataType { get; }
+
+        /// <summary>
+        ///     スキットデータを変換するインターフェース。
+        /// </summary>
+        /// <param name="rawData">生データ</param>
+        /// <returns>変換後のデータ</returns>
+        public abstract List<SkitSceneDataAbstractBase> Convert(List<string[]> rawData);
+    }
+}
+```
+
+`SkitSceneDataAbstractBase`は返すデータを定義するクラスです。
+
+```csharp
+// SkitSceneDataAbstractBase.cs
+namespace SkitSystem.Model
+{
+    /// <summary>
+    ///     スキットシーンで使われる会話データの基底
+    /// </summary>
+    public class SkitSceneDataAbstractBase
+    {
+    }
+}
+```
 
 次に実際の会話シーン内で定義したデータを処理するクラスを作成します。
-[`SkitSceneExecutorBase`](Assets/Scripts/SkitSystem/Model/SkitSceneExecutor/SkitSceneExecutorBase.cs)を継承し、`HandleSkitSceneData`で処理する仕組みを定義してください。描画や入力処理が絡む場合は現在処理しているデータをリアクティブで公開し、Presenterでつなぎこむことをお勧めします。
+`SkitSceneExecutorBase`を継承し、`HandleSkitSceneData`で処理する仕組みを定義してください。描画や入力処理が絡む場合は現在処理しているデータをリアクティブで公開し、Presenterでつなぎこむことをお勧めします。
+
+```csharp
+// SkitSceneExecutorBase.cs
+namespace SkitSystem.Model
+{
+    public abstract class SkitSceneExecutorBase
+    {
+        public abstract string HandleSkitContextType { get; }
+        public UniTaskCompletionSource<string> AwaitForInput { get; protected set; } = new();
+
+        public abstract UniTask HandleSkitSceneData(SkitSceneDataAbstractBase skitSceneData, CancellationToken token);
+
+        public abstract bool TrtGetNextSkitSceneData(out SkitSceneDataAbstractBase nextSkitContextQueue);
+    }
+}
+```
 
 また入力を待つ際は待機用の`UniTaskCompletionSource` を公開するのもおすすめです。
 
-詳しくは[`ConversationExecutor`](Assets/Scripts/SkitSystem/Model/SkitSceneExecutor/ConversationExecutor.cs)などを参考にしてください。
+詳しくは`ConversationExecutor`などを参考にしてください。
+
+```csharp
+// ConversationExecutor.cs（抜粋）
+public class ConversationExecutor : SkitSceneExecutorBase
+{
+    private readonly ReactiveProperty<ConversationData> _currentConversationData = new();
+    
+    public override string HandleSkitContextType => nameof(ConversationGroupData);
+    public ReadOnlyReactiveProperty<ConversationData> CurrentConversationData => _currentConversationData;
+
+    public override async UniTask HandleSkitSceneData(SkitSceneDataAbstractBase skitSceneData, CancellationToken token)
+    {
+        if (skitSceneData is not ConversationGroupData currentConversationGroup) return;
+
+        foreach (var conversation in currentConversationGroup.ConversationData)
+        {
+            _currentConversationData.Value = conversation;
+            await AwaitForInput.Task;
+            AwaitForInput = new UniTaskCompletionSource<string>();
+        }
+    }
+}
+```
