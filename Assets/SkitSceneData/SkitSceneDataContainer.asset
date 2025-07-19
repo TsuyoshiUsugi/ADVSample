@@ -12,5 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e2ce4a8704f2f7498205aa088232541, type: 3}
   m_Name: SkitSceneDataContainer
   m_EditorClassIdentifier: 
-  IsInitialized: 0
-  UseLanguage: 1
+  UseLanguage: 0

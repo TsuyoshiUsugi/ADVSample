@@ -1,183 +1,106 @@
-# SkitProject - 会話システム / Conversation System
+# ADVゲームシステム
 
-Unity向けの高機能な会話・対話システムです。ビジュアルノベルやストーリー重視のゲームでの使用を想定しています。
+# 概要
 
-A sophisticated conversation and dialogue system for Unity, designed for visual novels and story-driven games.
+ADVゲームの処理のサンプルです。ADVゲームの基本的なシステム（会話再生、画像読みこみ＆表示）を実装しております。
 
-## セットアップ / Setup
+また会話データは共有ドライブ上のスプレッドシートorアドレッサブルで取得できるようになっており、複数人やUnity,Gitに慣れていない人でも編集しやすい仕組みになっています。
 
-詳細なセットアップ手順については以下をご覧ください：
+# 実装済み機能
 
-For detailed setup instructions, please see:
+ゲーム内処理
 
-**[📋 セットアップガイド / Setup Guide](SETUP.md)**
+- 会話再生機能（タップで次の会話再生、会話再生中にタップで一気に表示）
+- シーン遷移前後のフェード
+- ログの表示
+- フラグ変更タグ
 
-## 使用方法 / Usage
+エディタ
 
-詳細な使用方法とAPIリファレンスについては以下をご覧ください：
+- スクリプト作成時に名前空間に合わせてコードを生成する
+- スプレッドシート（CSV形式）を共有ドライブ上から取得する
+- スプレッドシート（CSV形式）をアドレッサブルで取得する
 
-For detailed usage instructions and API reference, please see:
+# プロジェクトのセットアップ
 
-**[📚 使用方法ガイド / Usage Guide](USAGE.md)**
+1. Unity6000.0.51を準備して開く
+2. 依存関係を自動解決（プロジェクトオープン時に自動実行）
 
-## 主な機能 / Key Features
+## 依存関係
+- UniTask
+- R3
+- Unity Addressables
+- Unity Input System
+- NuGet for Unity
 
-### 🌐 多言語対応 / Multi-Language Support
-- 日本語、英語に対応（実装済み）
-- CSVデータで言語列を分けて管理
-- Support for Japanese and English (implemented)
-- Language columns separated in CSV data
+# 会話データの設定
 
-### 🎯 フラグベースの会話制御 / Flag-Based Dialogue Flow
-- 排他的フラグシステム（一度に1つのフラグのみアクティブ）
-- ゲーム状態に基づく分岐会話
-- タグ処理システムでフラグを動的変更
-- Exclusive flag system (only one flag active at a time)
-- Branching dialogue based on game state
-- Dynamic flag modification via tag processing system
+## スプレッドシート形式
 
-### 📊 柔軟なデータ読み込み / Flexible Data Loading
-- Googleスプレッドシート（開発用）
-- Addressable Assets（本番用）
-- Google Sheets (development)
-- Addressable Assets (production)
+会話データはGoogleスプレッドシートまたはCSVファイルで管理できます。
 
-### ⚡ 非同期処理 / Asynchronous Operations
-- UniTaskを使用したスムーズな処理
-- CancellationTokenで適切なキャンセル処理
-- `UniTaskCompletionSource`で入力待機管理
-- Addressableアセットの非同期ロード
-- Smooth operations using UniTask
-- Proper cancellation handling with CancellationToken
-- Input waiting management with UniTaskCompletionSource
-- Asynchronous Addressable asset loading
+### データ構造
 
-### 🎨 文字送り演出 / Text Animation
-- 文字ごとの段階的表示（DOTween使用）
-- タップで即座に全文表示と次の会話へ進行
-- タグを視覚的に削除して表示
-- ログ機能で過去の会話を管理
-- Character-by-character text display using DOTween
-- Tap to show full text instantly and advance to next
-- Visual tag removal from displayed text
-- Log system for managing conversation history
+**フラグ設定欄**
+- フラグ名（排他的フラグシステム）
+- 各言語での条件設定
 
-### 🎭 キャラクター・背景表示 / Character & Background Display
-- キャラクター画像の動的読み込み
-- 背景画像の自動切り替え
-- 画面遷移時のフェード処理
-- Dynamic character image loading
-- Automatic background switching
-- Fade transitions between scenes
+**会話データ欄**
+- 背景画像名
+- 話者名
+- 会話テキスト（各言語対応）
+- キャラクター表示設定
 
-## システム構成 / System Architecture
+**表示キャラ画像設定欄**
+- 表示するキャラ名
+- 各感情キーで読みこむファイル名（アドレッサブルで取得）
 
-### MVP パターン / MVP Pattern
-- **Model**: データ管理とビジネスロジック
-- **View**: UI表示とユーザー入力
-- **Presenter**: ModelとViewの橋渡し
+**名前設定**
+- 表示するキャラ名
+- 英語の時の名前
 
-### 主要コンポーネント / Core Components
+# 設定したデータをUnity上で読みこめるようにする
 
-#### データ管理 / Data Management
-- `SkitSceneDataContainer`: 会話データの中央管理（シングルトンパターン）
-- `CsvLoader`: CSV形式のデータ読み込み
-- `ConvertToConversationData`: CSVデータをConversationDataに変換
-- `FlagTagHandler`: フラグタグの処理（`<flag=value>`形式）
+会話シーンでは主にフラグデータ、会話データ、会話シーン設定データが必要になります。
 
-#### 実行システム / Execution System
-- `SkitSceneManager`: 会話シーケンスの統括管理とキューベース実行
-  - `DoSkitSequence()`: 主要な実行メソッド
-  - `CancelSkitSequence()`: キャンセル処理
-- `ConversationExecutor`: 会話データの実行処理
-- `SkitSceneExecutorBase`: 実行処理の基底クラス
-- `SkitSceneExiter`: シーン終了処理管理
+それぞれ、スクリプタブルオブジェクトの
 
-#### プレゼンテーション / Presentation
-- `SkitScenePresenter`: メインプレゼンター
-- `SkitSceneStarter`: システム初期化とデータロード
+- ConversationFlagDataLoader
+- ConversationSkitDataLoader
+- SkitSceneGeneralSettingLoader
 
-#### ビュー / View
-- `ConversationDialogView`: 会話UI表示とタグ処理
-- `ConversationCharaImageAndBackgroundView`: キャラクター・背景表示
-- `SkitSceneFader`: 画面フェード処理
-- `SkitSceneLogViewer`: ログ表示機能
-- `LogPrefab`: ログエントリプレハブ
+で読みこんでいます。
 
-### データ構造 / Data Structure
+これらの
 
-#### 会話データ / Conversation Data
-```csharp
-ConversationData
-├── BackgroundImageName    // 背景画像名
-├── TalkerName             // 話者名
-├── Dialogue               // 会話テキスト
-└── ShowCharaDataList      // キャラクター表示データ配列
-    ├── CharaName          // キャラクター名
-    ├── CharaEmote         // 感情表現
-    └── StandPos           // 立ち位置（左/真ん中/右）
-```
+- スプシのアドレス
+- ローカルのアドレッサブルのアドレス
 
-#### フラグデータ / Flag Data
-```csharp
-FlagData
-├── CurrentFlag            // 現在のアクティブフラグ
-└── SetExclusiveFlag()     // 排他的フラグ設定メソッド
-```
+を設定することでデータを読みこめるようになります。
 
-## 必要な依存関係 / Dependencies
+スプシのアドレスは該当のシートを開き、左上の
 
-- **UniTask**: 非同期処理 / Async operations
-- **R3**: リアクティブプログラミング / Reactive programming
-- **Unity Addressables**: アセット管理 / Asset management
-- **Unity Input System**: 入力処理 / Input handling
-- **NuGet for Unity**: .NETパッケージ統合 / .NET package integration
+ファイル＞共有＞Webに公開
 
+から取得できます。
 
-## エディター拡張 / Editor Extensions
+アドレッサブルアセットは該当のCSVファイルをAddressable Groups ウィンドウで登録することで可能です。
 
-### カスタムスクリプト作成ツール / Custom Script Creator
-- `Assets/Create/Custom Script`メニューから利用可能
-- 自動的な名前空間生成
-- MonoBehaviourと通常クラスのテンプレート
+# 独自のCSVデータをロードし、それに合わせた処理をする
 
-## ファイル構成 / File Structure
+まずCSVデータを変換する処理を作成します。
+`IRawSkitDataConverter`を継承し、各カラムを読みこみ、`List<SkitSceneDataAbstractBase>`を返す処理を作成します。
 
-```
-Assets/
-├── Scripts/
-│   ├── Editor/                    # エディター拡張
-│   │   └── CustomScriptCreator.cs
-│   └── SkitSystem/               # メインシステム
-│       ├── Common/               # 共通コンポーネント
-│       ├── Model/                # データモデル
-│       │   ├── RawSkitDataConverter/ # データ変換処理
-│       │   ├── SkitDataTagHandler/   # タグ処理システム
-│       │   ├── SkitSceneData/        # 会話データ構造
-│       │   └── SkitSceneExecutor/    # 実行システム
-│       ├── Presenter/            # プレゼンター
-│       └── View/                 # UI表示・フェード処理・ログ
-├── Prefab/                       # プレハブ
-├── Scenes/                       # サンプルシーン
-└── SkitScenData/                 # 会話データ
-```
+`SkitSceneDataAbstractBase`は返すデータを定義するクラスです。
 
-## 開発メモ / Development Notes
+次に実際の会話シーン内で定義したデータを処理するクラスを作成します。
+`SkitSceneExecutorBase`
 
-### 最近の更新 / Recent Updates
-- タグ処理システムの追加（フラグ操作等）
-- シーン終了処理クラス（SkitSceneExiter）の実装
-- ログ表示機能の実装
-- キューベースの実行システムで順序制御を改善
-- キャラクター画像の動的読み込み機能
-- 背景画像の自動切り替え機能
-- 画面遷移時のFade処理
+を継承し、
+`HandleSkitSceneData`
 
-### 今後の課題 / Future Tasks
-- タグ処理システムの機能拡充（フラグ以外のタグタイプ）
-- ログ表示のUI改善と操作性向上
-- オート再生機能の実装
-- セーブ/ロード機能の追加
-- パフォーマンス最適化とメモリ管理改善
-- エラーハンドリングの強化
+で処理する仕組みを定義してください。描画や入力処理が絡む場合は現在処理しているデータをリアクティブで公開し、Presenterでつなぎこむことをお勧めします。
 
+また入力を待つ際は待機用の`UniTaskCompletionSource` を公開するのもおすすめです。
+
+詳しくは`ConversationExecutor` などを参考にしてください。
