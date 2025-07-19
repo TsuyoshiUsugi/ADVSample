@@ -43,17 +43,17 @@ SkitSystemでは以下の2つのシートを**別々に**作成・設定する�
 
 会話の内容とフラグ設定を管理するシートです。
 
-### データ構造
+### 必須列（Required Columns）
 
-**フラグ設定欄**
-- フラグ名（排他的フラグシステム）
-- 各言語での条件設定
-
-**会話データ欄**
-- 背景画像名
-- 話者名
-- 会話テキスト（各言語対応）
-- キャラクター表示設定
+- **id**: 会話ID / Conversation ID
+- **flag**: フラグ名 / Flag name
+- **background**: 背景画像名 / Background image name
+- **speaker**: 話者名 / Speaker name
+- **text_ja**: 日本語テキスト / Japanese text
+- **text_en**: 英語テキスト / English text
+- **chara_name**: キャラクター名 / Character name
+- **chara_emotion**: 感情 / Emotion
+- **chara_position**: 位置 / Position
 
 ## 2. 全般設定データシート（SkitSceneGeneralSettingLoader用）
 
@@ -63,7 +63,7 @@ SkitSystemでは以下の2つのシートを**別々に**作成・設定する�
 
 **表示キャラ画像設定欄**
 - 表示するキャラ名
-- 各感情キーで読みこむファイル名（アドレッサブルで取得）
+- 各感情キーで読みこむファイル名（アドレッサブルで取得します）
 
 **名前設定**
 - 表示するキャラ名
