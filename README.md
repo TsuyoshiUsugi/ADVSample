@@ -73,6 +73,23 @@ SkitSystemでは以下の2つのシートを作成・設定する必要があり
 - **chara_emotion**: 感情 / Emotion
 - **chara_position**: 位置 / Position
 
+### 背景画像の設定方法
+会話データシートに記載された背景画像名は、アドレッサブル経由でロードされます。
+正しく表示させるためには、以下の手順で設定してください。
+
+1. 背景画像をアドレッサブルに登録
+Unityエディタで背景画像（Sprite や Texture2D など）を選択します。
+
+Addressable にチェックを入れ、Addressable Groups ウィンドウでグループに追加します。
+
+Address に、シートで指定する名前をそのまま入力してください。
+
+例：
+シートの background 列に bg_school と記載する場合 → 該当アセットのアドレスも bg_school に設定します。
+
+2. シートに背景画像名を記載
+会話データシートの background 列に、アドレッサブルに設定したアセットの アドレス名 を記載してください。
+
 ## 2. 全般設定データシート（SkitSceneGeneralSettingLoader用）
 <img width="1993" height="389" alt="3e4aeac5e8c4f06245dccc788e8e98f9" src="https://github.com/user-attachments/assets/f4f81948-7a7f-435d-8f17-4a87e2a0d821" />
 
