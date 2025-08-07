@@ -56,7 +56,7 @@ https://github.com/user-attachments/assets/df958452-95bb-4166-9bfc-e790f718021a
 
 SkitSystemでは以下の2つのシートを作成・設定する必要があります：
 
-## 1. 会話データシート（ConversationSkitDataLoader用）
+## 1. 会話データシート（ConversationSkitDataLoader,ConversationFlagDataLoader用）
 <img width="3449" height="845" alt="d69e0032bff8198f7be5f80803b6fc72" src="https://github.com/user-attachments/assets/d7dc03d0-9c9a-4669-ad77-b1c041c719be" />
 
 会話の内容とフラグ設定を管理するシートです。
